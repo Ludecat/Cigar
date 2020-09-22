@@ -424,9 +424,12 @@
                 for (i = 0; i < LBplayerNum; ++i) {
                     var nodeId = msg.getUint32(offset, true);
                     offset += 4;
+                    var score = msg.getUint32(offset, true);
+                    offset += 4;
                     leaderBoard.push({
                         id: nodeId,
-                        name: getString()
+                        name: getString(),
+                        score: score
                     })
                 }
                 drawLeaderBoard();
@@ -938,6 +941,7 @@
                         if (me) playerCells[0].name && (c = playerCells[0].name);
                         me ? ctx.fillStyle = "#FFAAAA" : ctx.fillStyle = "#FFFFFF";
                         if (!noRanking) c = b + 1 + ". " + c;
+                        c += " (" + leaderBoard[b].score + ")";
                         var start = (ctx.measureText(c).width > 200) ? 2 : 100 - ctx.measureText(c).width * 0.5;
                         ctx.fillText(c, start, 70 + 24 * b);
                     }
