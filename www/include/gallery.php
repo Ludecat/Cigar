@@ -9,7 +9,7 @@
                 if (!in_array($curimg, $ignore) && strtolower(pathinfo($curimg, PATHINFO_EXTENSION)) == "png") {
         ?>
         <li class="skin" onclick="$('#nick').val($(this).find('.title').text());" data-dismiss="modal">
-            <div class="circular" style='background-image: url("./<?php echo $dirname.$curimg ?>")'></div>
+            <div class="circular" style='background-image: url("./<?php echo "skins/".$curimg ?>")'></div>
             <h4 class="title"><?php echo pathinfo($curimg, PATHINFO_FILENAME); ?></h4>
         </li>
         <?php
