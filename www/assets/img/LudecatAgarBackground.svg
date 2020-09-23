@@ -4,11 +4,7 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1000px"
 	 height="1000px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
 <g id="Ebene_4">
-	<radialGradient id="SVGID_1_" cx="499.6985" cy="499.6982" r="507.6568" gradientUnits="userSpaceOnUse">
-		<stop  offset="0.0664" style="stop-color:#FFD85B"/>
-		<stop  offset="1" style="stop-color:#FFC53D"/>
-	</radialGradient>
-	<rect x="0" fill="url(#SVGID_1_)" width="999.396" height="999.396"/>
+	<rect x="0.302" y="0.302" fill="#FFD143" width="999.396" height="999.396"/>
 </g>
 <g id="Ebene_3">
 	<g>
