@@ -58,25 +58,28 @@
         <div id="helloDialog">
             <form role="form">
                 <div class="form-group">
-                    <h2 id="title">CigarProject</h2>
+                    <h2 id="title">Agar</h2>
                 </div>
 
                 <div class="form-group">
-                    <input id="nick" class="form-control save" data-box-id="0" placeholder="Nick" maxlength="15" />
-                    <select id="gamemode" class="form-control" onchange="setserver($(this).val());" required>
-                        <option selected disabled>Gamemode:</option>
-                        <option value="127.0.0.1:443">FFA</option>
+                    <select id="team-select" class="form-control" required>
+                        <option hidden disabled selected value>Select Team</option>
+                        <?php
+                            $string = file_get_contents("include/teamlist.json");
+                            $team_array = json_decode($string, true);
+
+                            foreach($team_array as $team)
+                            {
+                                echo '<option>'.$team.'</option>';
+                            }
+                        ?>
                     </select>
+                    <input id="nick" class="form-control save" data-box-id="0" placeholder="Nick" maxlength="15" />
                     <br clear="both" />
                 </div>
 
                 <div class="form-group">
-                    <div class="mb-10">
-                        <a data-toggle="modal" data-target="#inPageModal" onclick="openSkinsList();" class="btn-primary btn btn-info" role="button" style="width: 100%;">Skins Gallery</a>
-                    </div>
-
-                    <button type="submit" id="play-btn" onclick="setNick(document.getElementById('nick').value); return false;" class="btn btn-play btn-primary btn-needs-server">Play</button>
-                    <button onclick="$('#settings, #instructions').toggle(); return false;" class="btn btn-info btn-settings" id="settings-btn"><i class="glyphicon glyphicon-cog"></i></button>
+                    <button type="submit" id="play-btn" onclick="setNick('[' + document.getElementById('team-select').value + '] ' + document.getElementById('nick').value); return false;" class="btn btn-play btn-primary btn-needs-server">Play</button>
                     <br clear="both" />
                 </div>
 

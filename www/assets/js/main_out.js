@@ -960,19 +960,20 @@
                     boardLength = 60;
                 boardLength = !drawTeam ? boardLength + 24 * leaderBoard.length : boardLength + 180;
                 var scaleFactor = Math.min(0.22 * canvasHeight, Math.min(200, .3 * canvasWidth)) * 0.005;
-                lbCanvas.width = 200 * scaleFactor;
+                var leaderboardWidth = 320;
+                lbCanvas.width = leaderboardWidth * scaleFactor;
                 lbCanvas.height = boardLength * scaleFactor;
 
                 ctx.scale(scaleFactor, scaleFactor);
                 ctx.globalAlpha = .4;
                 ctx.fillStyle = "#000000";
-                ctx.fillRect(0, 0, 200, boardLength);
+                ctx.fillRect(0, 0, leaderboardWidth, boardLength);
 
                 ctx.globalAlpha = 1;
                 ctx.fillStyle = "#FFFFFF";
                 var c = "Leaderboard";
                 ctx.font = "30px Ubuntu";
-                ctx.fillText(c, 100 - ctx.measureText(c).width * 0.5, 40);
+                ctx.fillText(c, leaderboardWidth / 2 - ctx.measureText(c).width * 0.5, 40);
                 var b, l;
                 if (!drawTeam) {
                     for (ctx.font = "20px Ubuntu", b = 0, l = leaderBoard.length; b < l; ++b) {
@@ -985,7 +986,7 @@
                         me ? ctx.fillStyle = "#FFAAAA" : ctx.fillStyle = "#FFFFFF";
                         if (!noRanking) c = b + 1 + ". " + c;
                         c += " (" + leaderBoard[b].score + ")";
-                        var start = (ctx.measureText(c).width > 200) ? 2 : 100 - ctx.measureText(c).width * 0.5;
+                        var start = (ctx.measureText(c).width > leaderboardWidth) ? 2 : leaderboardWidth / 2 - ctx.measureText(c).width * 0.5;
                         ctx.fillText(c, start, 70 + 24 * b);
                     }
                 } else {
