@@ -1,5 +1,5 @@
 (function(wHandle, wjQuery) {
-    var CONNECTION_URL = "io-games.lude.cat/ogar", // Default Connection
+    var CONNECTION_URL = "127.0.0.1:10082", // Default Connection
         SKIN_URL = "./agar/skins/"; // Skin Directory
 
 
@@ -1422,7 +1422,7 @@
                     }
                 }
 
-                if (showSkin && skinName != '' && -1 != knownNameDict.indexOf(skinName)) {
+                if (showSkin && skinName != '') {
                     if (!skins.hasOwnProperty(skinName)) {
                         skins[skinName] = new Image;
                         skins[skinName].src = SKIN_URL + skinName + '.png';
