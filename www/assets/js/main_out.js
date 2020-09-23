@@ -739,8 +739,6 @@
             for (var newViewZoom = 0, i = 0; i < playerCells.length; i++) newViewZoom += playerCells[i].size;
             newViewZoom = Math.pow(Math.min(64 / newViewZoom, 1), .4) * viewRange();
             viewZoom = (9 * viewZoom + newViewZoom) / 10;
-            // ToDo: remove temporary fixed view distance for spectator
-            viewZoom = 3
         }
     }
 
@@ -765,6 +763,8 @@
             nodeX = (29 * nodeX + posX) / 30;
             nodeY = (29 * nodeY + posY) / 30;
             viewZoom = (9 * viewZoom + posSize * viewRange()) / 10;
+            // ToDo: remove temporary fixed view distance for spectator
+            viewZoom = 0.3;
         }
         buildQTree();
         mouseCoordinateChange();
