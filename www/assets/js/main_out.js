@@ -22,7 +22,7 @@
         leftTouchStartPos = new Vector2(0, 0),
         leftVector = new Vector2(0, 0);
 
-    var useHttps = "https:" == wHandle.location.protocol;
+    var useHttps = false;
 
     function gameLoop() {
         ma = true;
