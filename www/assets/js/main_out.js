@@ -2,6 +2,10 @@
     var CONNECTION_URL = "127.0.0.1:443", // Default Connection
         SKIN_URL = "./skins/"; // Skin Directory
 
+
+    var backgroundImage = new Image();
+    backgroundImage.src = "assets/img/LudecatAgarBackground.svg";
+
     wHandle.setserver = function(arg) {
         if (arg != CONNECTION_URL) {
             CONNECTION_URL = arg;
@@ -868,14 +872,51 @@
     }
 
     function drawGrid() {
-        ctx.fillStyle = showDarkTheme ? "#111111" : "#F2FBFF";
+        
+        var a = canvasWidth / viewZoom,
+            b = canvasHeight / viewZoom;
+
+        var left = (nodeX - a / 2),
+            top = (nodeY - b / 2),
+            right = (nodeX + a / 2),
+            bottom = (nodeY + b / 2);
+
+        // scale so border is at 20% of the image
+        var borderExtendFactor = 1.67;
+        
+        var extendedBorderLeftPos = leftPos * borderExtendFactor;
+        var extendedBorderTopPos = topPos * borderExtendFactor;
+        var extendedBorderRightPos = rightPos * borderExtendFactor;
+        var extendedBorderBottomPos = bottomPos * borderExtendFactor;
+        
+
+        left -= extendedBorderLeftPos;
+        top -= extendedBorderTopPos;
+        right -= extendedBorderLeftPos;
+        bottom -= extendedBorderTopPos;
+
+        var extendedBorderWidth = extendedBorderRightPos - extendedBorderLeftPos,
+            extendedBorderHeight = extendedBorderBottomPos - extendedBorderTopPos;
+
+
+        var leftRatio = left / extendedBorderWidth,
+            topRatio = top / extendedBorderHeight,
+            rightRatio = right / extendedBorderWidth,
+            bottomRatio = bottom / extendedBorderHeight;
+
+        var sourceX = leftRatio * backgroundImage.width,
+            sourceY = topRatio * backgroundImage.height,
+            sourceWidth = (rightRatio - leftRatio) * backgroundImage.width,
+            sourceHeight = (bottomRatio - topRatio) * backgroundImage.height;
+        
+
+        ctx.fillStyle = showDarkTheme ? "#F7D68A" : "#F7D68A";
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctx.drawImage(backgroundImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvasWidth, canvasHeight);
         ctx.save();
         ctx.strokeStyle = showDarkTheme ? "#AAAAAA" : "#000000";
         ctx.globalAlpha = .2;
         ctx.scale(viewZoom, viewZoom);
-        var a = canvasWidth / viewZoom,
-            b = canvasHeight / viewZoom;
         for (var c = -.5 + (-nodeX + a / 2) % 50; c < a; c += 50) {
             ctx.moveTo(c, 0);
             ctx.lineTo(c, b);
