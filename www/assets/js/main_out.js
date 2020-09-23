@@ -1,6 +1,6 @@
 (function(wHandle, wjQuery) {
     var CONNECTION_URL = "io-games.lude.cat/ogar", // Default Connection
-        SKIN_URL = "./agar/skins/"; // Skin Directory
+        SKIN_URL = "./skins/"; // Skin Directory
 
 
     var backgroundImage = new Image();
