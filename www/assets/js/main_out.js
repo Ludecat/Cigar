@@ -1410,7 +1410,10 @@
                     }
                 }
                 ctx.closePath();
-                var skinName = this.name.toLowerCase();
+            
+                var teamMatch = this.name.match(/\[(?<TeamTag>.*)\]/);
+                var skinName = teamMatch != null ? teamMatch.groups['TeamTag'] : '';
+
 
                 // Load Premium skin if we have one set
                 if (typeof this._skin != 'undefined' && this._skin != '') {
@@ -1464,7 +1467,7 @@
                         var rnchache = ncache.render(),
                             m = ~~(rnchache.width * ratD),
                             h = ~~(rnchache.height * ratD);
-                        ctx.drawImage(rnchache, x - ~~(m * 0.5), y - ~~(h * 0.5), m, h);
+                        ctx.drawImage(rnchache, x - ~~(m * 0.5), y - ~~(h * 3), m, h);
                         b += rnchache.height * 0.5 * ratio + 4;
                     }
 
