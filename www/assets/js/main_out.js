@@ -1,5 +1,5 @@
 (function(wHandle, wjQuery) {
-    var CONNECTION_URL = "127.0.0.1:10082", // Default Connection
+    var CONNECTION_URL = "io-games.lude.cat/ogar", // Default Connection
         SKIN_URL = "./agar/skins/"; // Skin Directory
 
 
