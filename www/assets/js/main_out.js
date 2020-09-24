@@ -358,7 +358,8 @@
         log.info("Connection successful!")
     }
 
-    function onWsClose() {
+    function onWsClose(event) {
+        console.log(event.code + " : " + event.reason);
         setTimeout(showConnecting, delay);
         delay *= 1.5;
     }
