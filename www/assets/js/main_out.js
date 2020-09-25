@@ -1614,34 +1614,5 @@
             }
         }
     };
-    wjQuery(function() {
-        function renderFavicon() {
-            if (0 < playerCells.length) {
-                redCell.color = playerCells[0].color;
-                redCell.setName(playerCells[0].name);
-            }
-            ctx.clearRect(0, 0, 32, 32);
-            ctx.save();
-            ctx.translate(16, 16);
-            ctx.scale(.4, .4);
-            redCell.drawOneCell(ctx);
-            ctx.restore();
-            var favicon = document.getElementById("favicon"),
-                oldfavicon = favicon.cloneNode(true);
-            oldfavicon.setAttribute("href", favCanvas.toDataURL("image/png"));
-            favicon.parentNode.replaceChild(oldfavicon, favicon)
-        }
-
-        var redCell = new Cell(0, 0, 0, 32, "#ED1C24", ""),
-            favCanvas = document.createElement("canvas");
-        favCanvas.width = 32;
-        favCanvas.height = 32;
-        var ctx = favCanvas.getContext("2d");
-        renderFavicon();
-
-        // Causes stuttering..
-        //setInterval(renderFavicon, 1E3);
-
-    });
     wHandle.onload = gameLoop
 })(window, window.jQuery);
