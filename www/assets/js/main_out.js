@@ -55,14 +55,6 @@
             isTyping = false;
         };
 
-        document.getElementById("chat_textbox").onblur = function() {
-            isTyping = false;
-        };
-
-
-        document.getElementById("chat_textbox").onfocus = function() {
-            isTyping = true;
-        };
 
         var spacePressed = false,
             qPressed = false,
@@ -74,18 +66,7 @@
         wHandle.onkeydown = function(event) {
             switch (event.keyCode) {
                 case 13: // enter
-                    if (isTyping || hideChat) {
-                        isTyping = false;
-                        document.getElementById("chat_textbox").blur();
-                        chattxt = document.getElementById("chat_textbox").value;
-                        if (chattxt.length > 0) sendChat(chattxt);
-                        document.getElementById("chat_textbox").value = "";
-                    } else {
-                        if (!hasOverlay) {
-                            document.getElementById("chat_textbox").focus();
-                            isTyping = true;
-                        }
-                    }
+                    
                     break;
                 case 32: // space
                     if ((!spacePressed) && (!isTyping)) {
@@ -517,39 +498,7 @@
     }
 
     function drawChatBoard() {
-        if (hideChat)  {
-            chatCanvas = null;
-            return;
-        }
-        chatCanvas = document.createElement("canvas");
-        var ctx = chatCanvas.getContext("2d");
-        var scaleFactor = Math.min(Math.max(canvasWidth / 1200, 0.75), 1); //scale factor = 0.75 to 1
-        chatCanvas.width = 1E3 * scaleFactor;
-        chatCanvas.height = 550 * scaleFactor;
-        ctx.scale(scaleFactor, scaleFactor);
-        var nowtime = Date.now();
-        var lasttime = 0;
-        if (chatBoard.length >= 1)
-            lasttime = chatBoard[chatBoard.length - 1].time;
-        else return;
-        var deltat = nowtime - lasttime;
-        ctx.globalAlpha = 0.8 * Math.exp(-deltat / 25000);
-
-        var len = chatBoard.length;
-        var from = len - 15;
-        if (from < 0) from = 0;
-        for (var i = 0; i < (len - from); i++) {
-            var chatName = new UText(18, chatBoard[i + from].color);
-            chatName.setValue(chatBoard[i + from].name);
-            var width = chatName.getWidth();
-            var a = chatName.render();
-            ctx.drawImage(a, 15, chatCanvas.height / scaleFactor - 24 * (len - i - from));
-
-            var chatText = new UText(18, '#666666');
-            chatText.setValue(':' + chatBoard[i + from].message);
-            a = chatText.render();
-            ctx.drawImage(a, 15 + width * 1.8, chatCanvas.height / scaleFactor - 24 * (len - from - i));
-        }
+        
     }
 
 
@@ -1109,11 +1058,6 @@
     };
     wHandle.setChatHide = function(arg) {
         hideChat = arg;
-        if (hideChat) {
-            wjQuery('#chat_textbox').hide();
-        } else {
-            wjQuery('#chat_textbox').show();
-        }
     }
     wHandle.spectate = function() {
         userNickName = null;
@@ -1698,7 +1642,6 @@
         // Causes stuttering..
         //setInterval(renderFavicon, 1E3);
 
-        setInterval(drawChatBoard, 1E3);
     });
     wHandle.onload = gameLoop
 })(window, window.jQuery);
