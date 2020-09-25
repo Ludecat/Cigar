@@ -1,12 +1,11 @@
-(function(wHandle, wjQuery) {
+(function (wHandle, wjQuery) {
     var CONNECTION_URL = configData.CONNECTION_URL, // Default Connection
         SKIN_URL = "./skins/"; // Skin Directory
-
 
     var backgroundImage = new Image();
     backgroundImage.src = "assets/img/LudecatAgarBackground.svg";
 
-    wHandle.setserver = function(arg) {
+    wHandle.setserver = function (arg) {
         if (arg != CONNECTION_URL) {
             CONNECTION_URL = arg;
             showConnecting();
@@ -32,7 +31,7 @@
         mainCanvas = nCanvas = document.getElementById("canvas");
         ctx = mainCanvas.getContext("2d");
 
-        mainCanvas.onmousemove = function(event) {
+        mainCanvas.onmousemove = function (event) {
             rawMouseX = event.clientX;
             rawMouseY = event.clientY;
             mouseCoordinateChange()
@@ -44,14 +43,15 @@
             mainCanvas.addEventListener('touchend', onTouchEnd, false);
         }
 
-        mainCanvas.onmouseup = function() {};
+        mainCanvas.onmouseup = function () {
+        };
         if (/firefox/i.test(navigator.userAgent)) {
             document.addEventListener("DOMMouseScroll", handleWheel, false);
         } else {
             document.body.onmousewheel = handleWheel;
         }
 
-        mainCanvas.onfocus = function() {
+        mainCanvas.onfocus = function () {
             isTyping = false;
         };
 
@@ -63,10 +63,10 @@
             tPressed = false,
             pPressed = false,
             wPressed = false;
-        wHandle.onkeydown = function(event) {
+        wHandle.onkeydown = function (event) {
             switch (event.keyCode) {
                 case 13: // enter
-                    
+
                     break;
                 case 32: // space
                     if ((!spacePressed) && (!isTyping)) {
@@ -120,7 +120,7 @@
                     break;
             }
         };
-        wHandle.onkeyup = function(event) {
+        wHandle.onkeyup = function (event) {
             switch (event.keyCode) {
                 case 32: // space
                     spacePressed = false;
@@ -148,7 +148,7 @@
                     break;
             }
         };
-        wHandle.onblur = function() {
+        wHandle.onblur = function () {
             sendUint8(19);
             wPressed = spacePressed = qPressed = ePressed = rPressed = tPressed = pPressed = false
         };
@@ -294,7 +294,8 @@
             ws.onclose = null;
             try {
                 ws.close()
-            } catch (b) {}
+            } catch (b) {
+            }
             ws = null
         }
         var c = CONNECTION_URL;
@@ -467,7 +468,7 @@
         }
 
         var flags = view.getUint8(offset++);
-        
+
         if (flags & 0x80) {
             // SERVER Message
         }
@@ -498,7 +499,7 @@
     }
 
     function drawChatBoard() {
-        
+
     }
 
 
@@ -525,7 +526,7 @@
             }
         }
 
-        for (var i = 0;;) {
+        for (var i = 0; ;) {
             var nodeid = view.getUint32(offset, true);
             offset += 4;
             if (0 == nodeid) break;
@@ -539,7 +540,7 @@
             offset += 2;
 
             for (var r = view.getUint8(offset++), g = view.getUint8(offset++), b = view.getUint8(offset++),
-                    color = (r << 16 | g << 8 | b).toString(16); 6 > color.length;) color = "0" + color;
+                     color = (r << 16 | g << 8 | b).toString(16); 6 > color.length;) color = "0" + color;
             var colorstr = "#" + color,
                 flags = view.getUint8(offset++),
                 flagVirus = !!(flags & 0x01),
@@ -550,7 +551,7 @@
             flags & 2 && (offset += 4);
 
             if (flags & 4) {
-                for (;;) { // skin name
+                for (; ;) { // skin name
                     t = view.getUint8(offset, true) & 0x7F;
                     offset += 1;
                     if (0 == t) break;
@@ -558,7 +559,7 @@
                 }
             }
 
-            for (var char, name = "";;) { // nick name
+            for (var char, name = ""; ;) { // nick name
                 char = view.getUint16(offset, true);
                 offset += 2;
                 if (0 == char) break;
@@ -734,7 +735,7 @@
         } else {
             drawGrid();
         }
-        nodelist.sort(function(a, b) {
+        nodelist.sort(function (a, b) {
             return a.size === b.size ? a.id - b.id : a.size - b.size
         });
         ctx.save();
@@ -824,7 +825,7 @@
     }
 
     function drawGrid() {
-        
+
         var a = canvasWidth / viewZoom,
             b = canvasHeight / viewZoom;
 
@@ -835,12 +836,12 @@
 
         // scale so border is at 20% of the image
         var borderExtendFactor = 1.67;
-        
+
         var extendedBorderLeftPos = leftPos * borderExtendFactor;
         var extendedBorderTopPos = topPos * borderExtendFactor;
         var extendedBorderRightPos = rightPos * borderExtendFactor;
         var extendedBorderBottomPos = bottomPos * borderExtendFactor;
-        
+
 
         left -= extendedBorderLeftPos;
         top -= extendedBorderTopPos;
@@ -860,7 +861,7 @@
             sourceY = topRatio * backgroundImage.height,
             sourceWidth = (rightRatio - leftRatio) * backgroundImage.width,
             sourceHeight = (bottomRatio - topRatio) * backgroundImage.height;
-        
+
 
         ctx.fillStyle = showDarkTheme ? "#F7D68A" : "#F7D68A";
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
@@ -1032,45 +1033,45 @@
     var wCanvas = document.createElement("canvas");
     var playerStat = null;
     wHandle.isSpectating = false;
-    wHandle.setNick = function(arg) {
+    wHandle.setNick = function (arg) {
         hideOverlays();
         userNickName = arg;
         sendNickName();
         userScore = 0
     };
-    wHandle.setSkins = function(arg) {
+    wHandle.setSkins = function (arg) {
         showSkin = arg
     };
-    wHandle.setNames = function(arg) {
+    wHandle.setNames = function (arg) {
         showName = arg
     };
-    wHandle.setDarkTheme = function(arg) {
+    wHandle.setDarkTheme = function (arg) {
         showDarkTheme = arg
     };
-    wHandle.setColors = function(arg) {
+    wHandle.setColors = function (arg) {
         showColor = arg
     };
-    wHandle.setShowMass = function(arg) {
+    wHandle.setShowMass = function (arg) {
         showMass = arg
     };
-    wHandle.setSmooth = function(arg) {
+    wHandle.setSmooth = function (arg) {
         smoothRender = arg ? 2 : .4
     };
-    wHandle.setChatHide = function(arg) {
+    wHandle.setChatHide = function (arg) {
         hideChat = arg;
     }
-    wHandle.spectate = function() {
+    wHandle.spectate = function () {
         userNickName = null;
         wHandle.isSpectating = true;
         sendUint8(1);
         hideOverlays()
     };
-    wHandle.setAcid = function(arg) {
+    wHandle.setAcid = function (arg) {
         xa = arg
     };
-    wHandle.openSkinsList = function(arg) {
+    wHandle.openSkinsList = function (arg) {
         if ($('#inPageModalTitle').text() != "Skins") {
-            $.get('include/gallery.php').then(function(data) {
+            $.get('include/gallery.php').then(function (data) {
                 $('#inPageModalTitle').text("Skins");
                 $('#inPageModalBody').html(data);
             });
@@ -1078,8 +1079,8 @@
     };
 
     if (null != wHandle.localStorage) {
-        wjQuery(window).load(function() {
-            wjQuery(".save").each(function() {
+        wjQuery(window).load(function () {
+            wjQuery(".save").each(function () {
                 var id = $(this).data("box-id");
                 var value = wHandle.localStorage.getItem("checkbox-" + id);
                 if (value && value == "true" && 0 != id) {
@@ -1089,7 +1090,7 @@
                     $(this).val(value);
                 }
             });
-            wjQuery(".save").change(function() {
+            wjQuery(".save").change(function () {
                 var id = $(this).data('box-id');
                 var value = (id == 0) ? $(this).val() : $(this).prop('checked');
                 wHandle.localStorage.setItem("checkbox-" + id, value);
@@ -1100,7 +1101,8 @@
         }
     }
 
-    setTimeout(function() {}, 3E5);
+    setTimeout(function () {
+    }, 3E5);
     var T = {
         ZW: "EU-London"
     };
@@ -1114,7 +1116,7 @@
         dataType: "json",
         url: "checkdir.php",
         data: data,
-        success: function(data) {
+        success: function (data) {
             response = JSON.parse(data["names"]);
             for (var i = 0; i < response.length; i++) {
                 if (-1 == knownNameDict.indexOf(response[i])) {
@@ -1159,7 +1161,7 @@
         isEjected: false,
         isAgitated: false,
         wasSimpleDrawing: true,
-        destroy: function() {
+        destroy: function () {
             var tmp;
             for (tmp = 0, len = nodelist.length; tmp < len; tmp++)
                 if (nodelist[tmp] === this) {
@@ -1177,10 +1179,10 @@
             this.destroyed = true;
             Cells.push(this)
         },
-        getNameSize: function() {
+        getNameSize: function () {
             return Math.max(~~(.3 * this.size), 24)
         },
-        setName: function(a) {
+        setName: function (a) {
             this.name = a;
             if (null == this.nameCache) {
                 this.nameCache = new UText(this.getNameSize(), "#FFFFFF", true, "#000000");
@@ -1190,14 +1192,14 @@
                 this.nameCache.setValue(this.name);
             }
         },
-        setSize: function(a) {
+        setSize: function (a) {
             this.nSize = a;
             var m = ~~(this.size * this.size * 0.01);
             if (null === this.sizeCache)
                 this.sizeCache = new UText(this.getNameSize() * 0.5, "#FFFFFF", true, "#000000");
             else this.sizeCache.setSize(this.getNameSize() * 0.5);
         },
-        createPoints: function() {
+        createPoints: function () {
             for (var samplenum = this.getNumPoints(); this.points.length > samplenum;) {
                 var rand = ~~(Math.random() * this.points.length);
                 this.points.splice(rand, 1);
@@ -1224,26 +1226,27 @@
                 this.pointsAcc.splice(rand2, 0, this.pointsAcc[rand2])
             }
         },
-        getNumPoints: function() {
+        getNumPoints: function () {
             if (0 == this.id) return 16;
             var a = 10;
             if (20 > this.size) a = 0;
             if (this.isVirus) a = 30;
             var b = this.size;
-            if (!this.isVirus)(b *= viewZoom);
+            if (!this.isVirus) (b *= viewZoom);
             b *= z;
-            if (this.flag & 32)(b *= .25);
+            if (this.flag & 32) (b *= .25);
             return ~~Math.max(b, a);
         },
-        movePoints: function() {
+        movePoints: function () {
             this.createPoints();
             for (var points = this.points, pointsacc = this.pointsAcc, numpoints = points.length, i = 0; i < numpoints; ++i) {
                 var pos1 = pointsacc[(i - 1 + numpoints) % numpoints],
                     pos2 = pointsacc[(i + 1) % numpoints];
                 pointsacc[i] += (Math.random() - .5) * (this.isAgitated ? 3 : 1);
                 pointsacc[i] *= .7;
-                10 < pointsacc[i] && (pointsacc[i] = 10); -
-                10 > pointsacc[i] && (pointsacc[i] = -10);
+                10 < pointsacc[i] && (pointsacc[i] = 10);
+                -
+                    10 > pointsacc[i] && (pointsacc[i] = -10);
                 pointsacc[i] = (pos1 + pos2 + 8 * pointsacc[i]) / 10
             }
             for (var ref = this, isvirus = this.isVirus ? 0 : (this.id / 1E3 + timestamp / 1E4) % (2 * Math.PI), j = 0; j < numpoints; ++j) {
@@ -1254,7 +1257,7 @@
                     var l = false,
                         n = points[j].x,
                         q = points[j].y;
-                    qTree.retrieve2(n - 5, q - 5, 10, 10, function(a) {
+                    qTree.retrieve2(n - 5, q - 5, 10, 10, function (a) {
                         if (a.ref != ref && 25 > (n - a.x) * (n - a.x) + (q - a.y) * (q - a.y)) {
                             l = true;
                         }
@@ -1280,7 +1283,7 @@
                 points[j].y = this.y + Math.sin(e * j + isvirus) * m
             }
         },
-        updatePos: function() {
+        updatePos: function () {
             if (0 == this.id) return 1;
             var a;
             a = (timestamp - this.updateTime) / 120;
@@ -1288,22 +1291,23 @@
             var b = 0 > a ? 0 : 1 < a ? 1 : a;
             this.getNameSize();
             if (this.destroyed && 1 <= b) {
-                var c = Cells.indexOf(this); -
-                1 != c && Cells.splice(c, 1)
+                var c = Cells.indexOf(this);
+                -
+                    1 != c && Cells.splice(c, 1)
             }
             this.x = a * (this.nx - this.ox) + this.ox;
             this.y = a * (this.ny - this.oy) + this.oy;
             this.size = b * (this.nSize - this.oSize) + this.oSize;
             return b;
         },
-        shouldRender: function() {
+        shouldRender: function () {
             if (0 == this.id) {
                 return true
             } else {
                 return !(this.x + this.size + 40 < nodeX - canvasWidth / 2 / viewZoom || this.y + this.size + 40 < nodeY - canvasHeight / 2 / viewZoom || this.x - this.size - 40 > nodeX + canvasWidth / 2 / viewZoom || this.y - this.size - 40 > nodeY + canvasHeight / 2 / viewZoom);
             }
         },
-        getStrokeColor: function() {
+        getStrokeColor: function () {
             var r = (~~(parseInt(this.color.substr(1, 2), 16) * 0.9)).toString(16),
                 g = (~~(parseInt(this.color.substr(3, 2), 16) * 0.9)).toString(16),
                 b = (~~(parseInt(this.color.substr(5, 2), 16) * 0.9)).toString(16);
@@ -1312,14 +1316,14 @@
             if (b.length == 1) b = "0" + b;
             return "#" + r + g + b;
         },
-        drawOneCell: function(ctx) {
+        drawOneCell: function (ctx) {
             if (this.shouldRender()) {
                 var b = (0 != this.id && !this.isVirus && !this.isAgitated && smoothRender > viewZoom);
                 if (10 > this.getNumPoints()) b = true;
                 if (this.wasSimpleDrawing && !b)
                     for (var c = 0; c < this.points.length; c++) this.points[c].size = this.size;
                 var bigPointSize = this.size;
-                if(!this.wasSimpleDrawing) {
+                if (!this.wasSimpleDrawing) {
                     for (var c = 0; c < this.points.length; c++) bigPointSize = Math.max(this.points[c].size, bigPointSize);
                 }
                 this.wasSimpleDrawing = b;
@@ -1338,7 +1342,7 @@
                     if (b) ctx.strokeStyle = this.getStrokeColor();
                     else ctx.strokeStyle = this.color;
                 }
-				ctx.beginPath();
+                ctx.beginPath();
                 if (b) {
                     var lw = this.size * 0.03;
                     ctx.lineWidth = lw;
@@ -1355,7 +1359,7 @@
                     }
                 }
                 ctx.closePath();
-            
+
                 var teamMatch = this.name.match(/\[(?<TeamTag>.*)\]/);
                 var skinName = teamMatch != null ? teamMatch.groups['TeamTag'] : '';
 
@@ -1394,7 +1398,7 @@
                     ctx.globalAlpha *= .1;
                     ctx.stroke();
                 }
-                ctx.globalAlpha = 1; 
+                ctx.globalAlpha = 1;
                 c = -1 != playerCells.indexOf(this);
                 var ncache;
                 //draw name
@@ -1443,31 +1447,31 @@
         _ctx: null,
         _dirty: false,
         _scale: 1,
-        setSize: function(a) {
+        setSize: function (a) {
             if (this._size != a) {
                 this._size = a;
                 this._dirty = true;
             }
         },
-        setScale: function(a) {
+        setScale: function (a) {
             if (this._scale != a) {
                 this._scale = a;
                 this._dirty = true;
             }
         },
-        setStrokeColor: function(a) {
+        setStrokeColor: function (a) {
             if (this._strokeColor != a) {
                 this._strokeColor = a;
                 this._dirty = true;
             }
         },
-        setValue: function(a) {
+        setValue: function (a) {
             if (a != this._value) {
                 this._value = a;
                 this._dirty = true;
             }
         },
-        render: function() {
+        render: function () {
             if (null == this._canvas) {
                 this._canvas = document.createElement("canvas");
                 this._ctx = this._canvas.getContext("2d");
@@ -1497,15 +1501,15 @@
             }
             return this._canvas
         },
-        getWidth: function() {
+        getWidth: function () {
             return (ctx.measureText(this._value).width + 6);
         }
     };
-    Date.now || (Date.now = function() {
+    Date.now || (Date.now = function () {
         return (new Date).getTime()
     });
     var Quad = {
-        init: function(args) {
+        init: function (args) {
             function Node(x, y, w, h, depth) {
                 this.x = x;
                 this.y = y;
@@ -1526,29 +1530,29 @@
                 depth: 0,
                 items: null,
                 nodes: null,
-                exists: function(selector) {
+                exists: function (selector) {
                     for (var i = 0; i < this.items.length; ++i) {
                         var item = this.items[i];
                         if (item.x >= selector.x && item.y >= selector.y && item.x < selector.x + selector.w && item.y < selector.y + selector.h) return true
                     }
                     if (0 != this.nodes.length) {
                         var self = this;
-                        return this.findOverlappingNodes(selector, function(dir) {
+                        return this.findOverlappingNodes(selector, function (dir) {
                             return self.nodes[dir].exists(selector)
                         })
                     }
                     return false;
                 },
-                retrieve: function(item, callback) {
+                retrieve: function (item, callback) {
                     for (var i = 0; i < this.items.length; ++i) callback(this.items[i]);
                     if (0 != this.nodes.length) {
                         var self = this;
-                        this.findOverlappingNodes(item, function(dir) {
+                        this.findOverlappingNodes(item, function (dir) {
                             self.nodes[dir].retrieve(item, callback)
                         })
                     }
                 },
-                insert: function(a) {
+                insert: function (a) {
                     if (0 != this.nodes.length) {
                         this.nodes[this.findInsertNode(a)].insert(a);
                     } else {
@@ -1560,13 +1564,13 @@
                         }
                     }
                 },
-                findInsertNode: function(a) {
+                findInsertNode: function (a) {
                     return a.x < this.x + this.w / 2 ? a.y < this.y + this.h / 2 ? 0 : 2 : a.y < this.y + this.h / 2 ? 1 : 3
                 },
-                findOverlappingNodes: function(a, b) {
+                findOverlappingNodes: function (a, b) {
                     return a.x < this.x + this.w / 2 && (a.y < this.y + this.h / 2 && b(0) || a.y >= this.y + this.h / 2 && b(2)) || a.x >= this.x + this.w / 2 && (a.y < this.y + this.h / 2 && b(1) || a.y >= this.y + this.h / 2 && b(3)) ? true : false
                 },
-                devide: function() {
+                devide: function () {
                     var a = this.depth + 1,
                         c = this.w / 2,
                         d = this.h / 2;
@@ -1578,7 +1582,7 @@
                     this.items = [];
                     for (c = 0; c < a.length; c++) this.insert(a[c])
                 },
-                clear: function() {
+                clear: function () {
                     for (var a = 0; a < this.nodes.length; a++) this.nodes[a].clear();
                     this.items.length = 0;
                     this.nodes.length = 0
@@ -1592,23 +1596,23 @@
             };
             return {
                 root: new Node(args.minX, args.minY, args.maxX - args.minX, args.maxY - args.minY, 0),
-                insert: function(a) {
+                insert: function (a) {
                     this.root.insert(a)
                 },
-                retrieve: function(a, b) {
+                retrieve: function (a, b) {
                     this.root.retrieve(a, b)
                 },
-                retrieve2: function(a, b, c, d, callback) {
+                retrieve2: function (a, b, c, d, callback) {
                     internalSelector.x = a;
                     internalSelector.y = b;
                     internalSelector.w = c;
                     internalSelector.h = d;
                     this.root.retrieve(internalSelector, callback)
                 },
-                exists: function(a) {
+                exists: function (a) {
                     return this.root.exists(a)
                 },
-                clear: function() {
+                clear: function () {
                     this.root.clear()
                 }
             }

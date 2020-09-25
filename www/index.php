@@ -28,11 +28,11 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/index.css" rel="stylesheet">
 
+    <script src="assets/config/serverconfig.js"></script>
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="assets/js/log.js"></script>
     <script src="assets/js/vector.js"></script>
-    <script type="text/javascript" src="assets/config/serverconfig.js"></script>
-    <script src="assets/js/main_out.js"></script> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -138,6 +138,6 @@
     <canvas id="canvas" width="800" height="600"></canvas>
     <div style="font-family:'Ubuntu'">&nbsp;</div>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script data-main="assets/config/serverconfig" src="assets/js/main_out.js"></script>
 </body>
 </html>
