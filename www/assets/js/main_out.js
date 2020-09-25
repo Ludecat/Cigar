@@ -1,5 +1,5 @@
 (function(wHandle, wjQuery) {
-    var CONNECTION_URL = JSON.parse(configData).CONNECTION_URL, // Default Connection
+    var CONNECTION_URL = configData.CONNECTION_URL, // Default Connection
         SKIN_URL = "./skins/"; // Skin Directory
 
 
