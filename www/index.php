@@ -31,7 +31,7 @@
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="assets/js/log.js"></script>
     <script src="assets/js/vector.js"></script>
-    <script type="text/javascript" src="assets/config/serverconfig.json"></script>
+    <script type="text/javascript" src="assets/config/serverconfig.js"></script>
     <script src="assets/js/main_out.js"></script> 
 </head>
 
