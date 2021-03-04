@@ -1,1 +1,1 @@
-var configData = {"CONNECTION_URL" : "games.ludecat.io/ogar"};
+var configData = {"CONNECTION_URL" : "agar.ludecat.io/ogar"};
