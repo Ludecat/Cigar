@@ -86,13 +86,13 @@
                     <br clear="both" />
                 </div>
 
-                <div id="settings" class="checkbox" style="display:none;">
+                <div id="settings" class="checkbox">
                     <div class="form-group" id="mainform">
                         <button id="spectate-btn" onclick="spectate(); return false;" style="width: 100%" class="btn btn-warning btn-spectate btn-needs-server">Spectate
                         </button>
                         <br clear="both" />
                     </div>
-                    <div style="margin: 6px;">
+                    <!-- <div style="margin: 6px;">
                         <label>
                             <input type="checkbox" class="save" data-box-id="1" onchange="setSkins(!$(this).is(':checked'));"> No skins</label>
                         <label>
@@ -107,7 +107,7 @@
                             <input type="checkbox" class="save" data-box-id="6" onchange="setSmooth($(this).is(':checked'));"> Smooth Render</label>
                         <label>
                             <input type="checkbox" class="save" data-box-id="7" onchange="setChatHide($(this).is(':checked'));"> Hide Chat</label>
-                    </div>
+                    </div> -->
                 </div>
             </form>
 
