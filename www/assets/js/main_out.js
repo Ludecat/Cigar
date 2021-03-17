@@ -308,6 +308,7 @@
         leaderBoard = [];
         mainCanvas = teamScores = null;
         userScore = 0;
+        timeLeft = 0;
         log.info("Connecting to " + wsUrl + "..");
         ws = new WebSocket(wsUrl);
         ws.binaryType = "arraybuffer";
@@ -451,6 +452,10 @@
                 break;
             case 99:
                 addChat(msg, offset);
+                break;
+            case 123:
+                timeLeft = msg.getUint16(offset, true);
+                updateTimer(timeLeft);
                 break;
         }
     }
@@ -781,6 +786,23 @@
             ctx.globalAlpha = 1;
             ctx.drawImage(c, 15, 15); //canvasHeight - 10 - 24 - 5
         }
+
+        if(null == timerText){
+            timerText = new UText(24, '#FFFFFF');
+        }
+
+        var minutesLeft = Math.trunc(timeLeft/60);
+        var secondsLeft = timeLeft%60;
+
+        timerText.setValue('Time Left: ' + minutesLeft + ":" + secondsLeft);
+        c = timerText.render();
+        a = c.width;
+        ctx.globalAlpha = .2;
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(canvasWidth/2 - (a+10)/2, 10, a + 10, 34); //canvasHeight - 10 - 24 - 10
+        ctx.globalAlpha = 1;
+        ctx.drawImage(c, canvasWidth/2-(a+10)/2 + 5, 15); //canvasHeight - 10 - 24 - 5
+
         drawSplitIcon(ctx);
 
         drawTouch(ctx);
@@ -954,6 +976,10 @@
             }
     }
 
+    function updateTimer(timeLeft){
+        this.timeLeft = timeLeft;
+    }
+
     function Cell(uid, ux, uy, usize, ucolor, uname, a) {
         this.id = uid;
         this.ox = this.x = ux;
@@ -1005,6 +1031,7 @@
         showColor = false,
         ua = false,
         userScore = 0,
+        timeLeft =0,
         showDarkTheme = false,
         showMass = false,
         hideChat = false,
@@ -1132,6 +1159,7 @@
         Canvas = null,
         z = 1,
         scoreText = null,
+        timerText = null,
         skins = {},
         knownNameDict = "".split(";"),
         knownNameDict_noDisp = [],
