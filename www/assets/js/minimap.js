@@ -27,8 +27,8 @@ class MiniMap {
   // -- Board size --
   // topLeft: x: -7053, y: -7053
   // bottomLLeft: x: -7052, y: 7052
-  // x: 7051, y: 7051
-  // x: 7048, y: -7048
+  // bottomRight: x: 7051, y: 7051
+  // Topleft: x: 7048, y: -7048
 
   updatePlayerCells(playerCells) {
 
@@ -51,19 +51,23 @@ class MiniMap {
   mapCoordinatesToMiniMap({ x, y }) {
     //game field width ......  x pos on original game field
     //mini map width ...... ? (x pos on mini map)
-
+    // console.log("original:")
+    // console.log(x,y)
     let newCordX = 0;
     let newCordY = 0;
-
+    
     if (x < 0) newCordX = this.gameFieldWidth - Math.abs(x);
     else newCordX = this.gameFieldWidth + x;
-
-    if (x < 0) newCordY = this.gameFieldHeight - Math.abs(y);
+    
+    if (y < 0) newCordY = this.gameFieldHeight - Math.abs(y);
     else newCordY = this.gameFieldHeight + y;
+    // console.log("gameFieldHeight: " + this.gameFieldHeight + "\nnewCordY: " + newCordY)
 
     const newX = (newCordX / (this.gameFieldWidth * 2)) * this.canvas.width;
     const newY = (newCordY / (this.gameFieldHeight * 2)) * this.canvas.height;
-
+    // console.log("new:")
+    // console.log(newX,newY)
+    // console.log("---------------")
     return { x: newX, y: newY };
   }
 }
