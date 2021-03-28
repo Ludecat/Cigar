@@ -452,9 +452,12 @@
                 break;
             case 64: // set border
 
+            console.log(leftPos)
                 leftPos = msg.getFloat64(offset, true);
+                miniMap.setGameFieldWidth(leftPos)
                 offset += 8;
                 topPos = msg.getFloat64(offset, true);
+                miniMap.setGameFieldHeight(topPos)
                 offset += 8;
                 rightPos = msg.getFloat64(offset, true);
                 offset += 8;
@@ -893,8 +896,8 @@
 
         var extendedBorderWidth = extendedBorderRightPos - extendedBorderLeftPos,
             extendedBorderHeight = extendedBorderBottomPos - extendedBorderTopPos;
-            miniMap.setExtendedBorderWidth(extendedBorderWidth)
-            miniMap.setExtendedBorderHeight(extendedBorderHeight)
+            // miniMap.setExtendedBorderWidth(extendedBorderWidth)
+            // miniMap.setExtendedBorderHeight(extendedBorderHeight)
             
             var leftRatio = left / extendedBorderWidth,
             topRatio = top / extendedBorderHeight,

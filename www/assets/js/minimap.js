@@ -4,21 +4,27 @@
     this.canvas = document.getElementById("canvasMiniMap")
     this.ctx = this.canvas.getContext("2d")
     this.playerCells = []
-    this.extendedBorderWidth = 0
-    this.extendedBorderHeight = 0
+    this.gameFieldWidth = null
+    this.gameFieldHeight = null
 
-    setInterval(() => {
-      console.log(this.playerCells[0]["x"], this.playerCells[0]["y"])
-    }, 10000)
+    // setInterval(() => {
+    //   console.log(this.playerCells[0]["x"], this.playerCells[0]["y"])
+    // }, 10000)
 
   }
 
-  setExtendedBorderWidth(width){
-    this.extendedBorderWidth = width
+  setGameFieldWidth(width){
+    if(this.gameFieldWidth === null){
+      this.gameFieldWidth = Math.abs(width)
+      Object.freeze(this.gameFieldWidth)
+    }
   }
 
-  setExtendedBorderHeight(height){
-    this.extendedBorderHeight = height
+  setGameFieldHeight(height){
+    if(this.gameFieldHeight === null){
+      this.gameFieldHeight = Math.abs(height)
+      Object.freeze(this.gameFieldHeight)
+    }
   }
 
   // addCell(cell){
@@ -37,8 +43,10 @@
   updatePlayerCells(playerCells){
     // this.playerCells = playerCells
 
-    this.extendedBorderWidth = 7052
-    this.extendedBorderHeight = 7052
+    // this.gameFieldWidth = 7052
+    // this.gameFieldHeight = 7052
+    // console.log(this.gameFieldWidth)
+    // console.log(this.gameFieldHeight)
 
     if(playerCells && playerCells.length > 0){
       this.ctx.beginPath();
@@ -66,14 +74,14 @@
     let newCordY = 0
 
 
-    if(x < 0) newCordX = this.extendedBorderWidth - Math.abs(x)
-    else newCordX = this.extendedBorderWidth + x
+    if(x < 0) newCordX = this.gameFieldWidth - Math.abs(x)
+    else newCordX = this.gameFieldWidth + x
 
-    if(x < 0) newCordY = this.extendedBorderHeight - Math.abs(y)
-    else newCordY = this.extendedBorderHeight + y
+    if(x < 0) newCordY = this.gameFieldHeight - Math.abs(y)
+    else newCordY = this.gameFieldHeight + y
     
-    const newX = newCordX / (this.extendedBorderWidth * 2) * this.canvas.width
-    const newY = newCordY / (this.extendedBorderHeight * 2) * this.canvas.height
+    const newX = newCordX / (this.gameFieldWidth * 2) * this.canvas.width
+    const newY = newCordY / (this.gameFieldHeight * 2) * this.canvas.height
     console.log(newX, newY)
     // console.log("----")
 
