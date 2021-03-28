@@ -138,8 +138,10 @@
     </div>
 
     <canvas id="canvas" width="800" height="600"></canvas>
+    <canvas id="canvasMiniMap" class="canvasMiniMap" width="300" height="300"></canvas>
     <div style="font-family:'Ubuntu'">&nbsp;</div>
 
+    <script src="assets/js/minimap.js"></script>
     <script data-main="assets/config/serverconfig" src="assets/js/main_out.js"></script>
 </body>
 </html>
