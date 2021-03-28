@@ -36,6 +36,7 @@
     var useHttps = "https:" == wHandle.location.protocol;
 
     function gameLoop() {
+
         ma = true;
         document.getElementById("canvas").focus();
         var isTyping = false;
@@ -452,7 +453,6 @@
                 break;
             case 64: // set border
 
-            console.log(leftPos)
                 leftPos = msg.getFloat64(offset, true);
                 miniMap.setGameFieldWidth(leftPos)
                 offset += 8;
@@ -531,6 +531,20 @@
 
 
     function updateNodes(view, offset) {
+        const testNodes = {...nodes}
+        // testNodes = testNodes.filter(node => name !== "")
+        let count = 0
+        for(const key in testNodes){
+            if(testNodes[key]["name"] !== "") count ++
+            // console.log(testNodes[key]["id"])
+        } 
+// console.log("---count: " + count)
+// console.log("------")
+
+
+
+
+
 
         timestamp = +new Date;
         var code = Math.random();
