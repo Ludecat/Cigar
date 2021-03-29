@@ -720,7 +720,7 @@
             nodeY = (29 * nodeY + posY) / 30;
             viewZoom = (9 * viewZoom + posSize * viewRange()) / 10;
             // ToDo: remove temporary fixed view distance for spectator
-            viewZoom = 0.3;
+            viewZoom = 0.4;
         }
         buildQTree();
         mouseCoordinateChange();
