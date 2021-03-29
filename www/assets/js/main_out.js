@@ -5,6 +5,18 @@
     var backgroundImage = new Image();
     backgroundImage.src = "assets/img/LudecatAgarBackground.svg";
 
+
+    //------ MINIMAP -------
+    const miniMap = new MiniMap()
+    // const canvasMinimMap = document.getElementById("canvasMiniMap")
+    // const ctxMiniMap = canvasMinimMap.getContext("2d");
+    // backgroundImage.onload = function(){
+    //     // ctxMiniMap.drawImage(backgroundImage ,0,0);  
+    // }
+    //------ End minimap -------
+
+
+
     wHandle.setserver = function (arg) {
         if (arg != CONNECTION_URL) {
             CONNECTION_URL = arg;
@@ -24,6 +36,7 @@
     var useHttps = "https:" == wHandle.location.protocol;
 
     function gameLoop() {
+
         ma = true;
         document.getElementById("canvas").focus();
         var isTyping = false;
@@ -366,7 +379,11 @@
         var offset = 0,
             setCustomLB = false;
         240 == msg.getUint8(offset) && (offset += 5);
+
+        // const temp = msg.getUint8(offset++)
+        // console.log(temp)
         switch (msg.getUint8(offset++)) {
+        // switch (temp) {
             case 16: // update nodes
                 updateNodes(msg, offset);
                 break;
@@ -394,8 +411,10 @@
                 }
                 break;
             case 32: // add node
-                nodesOnScreen.push(msg.getUint32(offset, true));
+            const tmp = msg.getUint32(offset, true)
+                nodesOnScreen.push(tmp);
                 offset += 4;
+                // miniMap.addCell(tmp)
                 break;
             case 48: // update leaderboard (custom text)
                 setCustomLB = true;
@@ -433,9 +452,12 @@
                 drawLeaderBoard();
                 break;
             case 64: // set border
+
                 leftPos = msg.getFloat64(offset, true);
+                miniMap.setGameFieldWidth(leftPos)
                 offset += 8;
                 topPos = msg.getFloat64(offset, true);
+                miniMap.setGameFieldHeight(topPos)
                 offset += 8;
                 rightPos = msg.getFloat64(offset, true);
                 offset += 8;
@@ -509,6 +531,21 @@
 
 
     function updateNodes(view, offset) {
+        const testNodes = {...nodes}
+        // testNodes = testNodes.filter(node => name !== "")
+        let count = 0
+        for(const key in testNodes){
+            if(testNodes[key]["name"] !== "") count ++
+            // console.log(testNodes[key]["id"])
+        } 
+// console.log("---count: " + count)
+// console.log("------")
+
+
+
+
+
+
         timestamp = +new Date;
         var code = Math.random();
         ua = false;
@@ -604,6 +641,7 @@
                     nodeY = node.y;
                 }
             }
+            miniMap.updatePlayerCells(playerCells)
         }
         queueLength = view.getUint32(offset, true);
         offset += 4;
@@ -872,18 +910,18 @@
 
         var extendedBorderWidth = extendedBorderRightPos - extendedBorderLeftPos,
             extendedBorderHeight = extendedBorderBottomPos - extendedBorderTopPos;
-
-
-        var leftRatio = left / extendedBorderWidth,
+            // miniMap.setExtendedBorderWidth(extendedBorderWidth)
+            // miniMap.setExtendedBorderHeight(extendedBorderHeight)
+            
+            var leftRatio = left / extendedBorderWidth,
             topRatio = top / extendedBorderHeight,
             rightRatio = right / extendedBorderWidth,
             bottomRatio = bottom / extendedBorderHeight;
-
-        var sourceX = leftRatio * backgroundImage.width,
+            
+            var sourceX = leftRatio * backgroundImage.width,
             sourceY = topRatio * backgroundImage.height,
             sourceWidth = (rightRatio - leftRatio) * backgroundImage.width,
             sourceHeight = (bottomRatio - topRatio) * backgroundImage.height;
-
 
         ctx.fillStyle = showDarkTheme ? "#F7D68A" : "#F7D68A";
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
