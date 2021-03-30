@@ -8,6 +8,29 @@ class MiniMap {
     this.playerName = null;
     this.nodeId = null;
     this.SKIN_URL = "./skins/";
+
+    this.teamColors = [
+      "#799f9b",
+      "#f77c17",
+      "#938dec",
+      "#27e03a",
+      "#eb32f7",
+      "#161d4a",
+      "#acd8fb",
+      "#eef2dc",
+      "#adc91e",
+      "#900872",
+      "#dfeb40",
+      "#ac5313",
+      "#58444a",
+      "#aa3e53",
+      "#d74164",
+      "#c8b455",
+      "#e48762",
+      "#52ddbb",
+      "#efdbfe",
+      "#ffffff"
+    ];
   }
 
   setGameFieldWidth(width) {
@@ -65,6 +88,7 @@ class MiniMap {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (playerCells && playerCells.length > 0) {
       playerCells.forEach((playerCell) => {
+        console.log(playerCell.team)
         ctx.beginPath();
         const size = 2 + playerCell.size * 0.05;
 
@@ -79,9 +103,15 @@ class MiniMap {
           ctx.arc(x, y, size, 0, 2 * Math.PI);
         }
 
-        ctx.fillStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`;
+        let fillColor = this.rgbToHexColor(playerCell.color)
+        // `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`
+
+        if(playerCell.team > 0) fillColor = this.teamColors[playerCell.team]
+
+        // ctx.fillStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`;
+        ctx.fillStyle = fillColor
         ctx.fill();
-        ctx.strokeStyle = this.getStrokeColor(playerCell.color);
+        ctx.strokeStyle = this.getStrokeColor(fillColor);
         ctx.stroke();
 
         // const ctx = this.ctx
@@ -131,6 +161,7 @@ class MiniMap {
   }
 
   toHexColor(c) {
+
     const hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   }
@@ -144,8 +175,8 @@ class MiniMap {
     );
   }
 
-  getStrokeColor(color) {
-    const hexColor = this.rgbToHexColor(color);
+  getStrokeColor(hexColor) {
+    // const hexColor = this.rgbToHexColor(color);
     var r = (~~(parseInt(hexColor.substr(1, 2), 16) * 0.9)).toString(16),
       g = (~~(parseInt(hexColor.substr(3, 2), 16) * 0.9)).toString(16),
       b = (~~(parseInt(hexColor.substr(5, 2), 16) * 0.9)).toString(16);
