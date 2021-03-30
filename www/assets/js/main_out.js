@@ -361,8 +361,27 @@
     }
 
     function onWsMessage(msg) {
-        handleWsMessage(new DataView(msg.data));
+       if(typeof msg.data === 'string'){
+           handleWsMessageNotBuffer(msg.data)
+       }
+       else{
+           handleWsMessage(new DataView(msg.data));
+       }
     }
+
+
+    function handleWsMessageNotBuffer(data){
+        const jsonData = JSON.parse(data)
+        if(jsonData.hasOwnProperty("messageId"))
+        switch (jsonData.messageId){
+            case "updatedPlayerNodes":
+                // miniMap.
+                miniMap.updateOtherPlayers(jsonData.data)
+                break
+
+        }
+    }
+
 
     function handleWsMessage(msg) {
         function getString() {
@@ -376,14 +395,13 @@
             return text;
         }
 
+
         var offset = 0,
             setCustomLB = false;
         240 == msg.getUint8(offset) && (offset += 5);
 
-        // const temp = msg.getUint8(offset++)
-        // console.log(temp)
+   
         switch (msg.getUint8(offset++)) {
-        // switch (temp) {
             case 16: // update nodes
                 updateNodes(msg, offset);
                 break;
@@ -414,7 +432,6 @@
             const tmp = msg.getUint32(offset, true)
                 nodesOnScreen.push(tmp);
                 offset += 4;
-                // miniMap.addCell(tmp)
                 break;
             case 48: // update leaderboard (custom text)
                 setCustomLB = true;
@@ -471,6 +488,7 @@
                     nodeY = posY;
                     viewZoom = posSize;
                 }
+
                 break;
             case 99:
                 addChat(msg, offset);
@@ -481,6 +499,7 @@
                 break;
         }
     }
+
 
     function addChat(view, offset) {
         function getString() {
@@ -531,21 +550,6 @@
 
 
     function updateNodes(view, offset) {
-        const testNodes = {...nodes}
-        // testNodes = testNodes.filter(node => name !== "")
-        let count = 0
-        for(const key in testNodes){
-            if(testNodes[key]["name"] !== "") count ++
-            // console.log(testNodes[key]["id"])
-        } 
-// console.log("---count: " + count)
-// console.log("------")
-
-
-
-
-
-
         timestamp = +new Date;
         var code = Math.random();
         ua = false;
@@ -641,7 +645,12 @@
                     nodeY = node.y;
                 }
             }
-            miniMap.updatePlayerCells(playerCells)
+            // miniMap.updateThisPlayerCell(playerCells)
+            if(playerCells && 
+                playerCells[0] && 
+                playerCells[0].hasOwnProperty("id") &&
+                !miniMap.playerId) 
+                miniMap.playerId = playerCells[0]["id"]
         }
         queueLength = view.getUint32(offset, true);
         offset += 4;

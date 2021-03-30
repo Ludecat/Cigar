@@ -3,9 +3,10 @@ class MiniMap {
     console.log("creating minimap");
     this.canvas = document.getElementById("canvasMiniMap");
     this.ctx = this.canvas.getContext("2d");
-    this.playerCells = [];
+    // this.playerCells = [];
     this.gameFieldWidth = null;
     this.gameFieldHeight = null;
+    this.playerId = null
 
   }
 
@@ -30,24 +31,52 @@ class MiniMap {
   // bottomRight: x: 7051, y: 7051
   // Topleft: x: 7048, y: -7048
 
-  updatePlayerCells(playerCells) {
+  updateThisPlayerCell(playerCells) {
+    // if (playerCells && playerCells.length > 0) {
+    //   if(!this.playerId) this.playerId = playerCells[0]["id"]
+    //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //   this.ctx.beginPath();
+    //   const { x, y } = this.mapCoordinatesToMiniMap({
+    //     x: playerCells[0]["x"],
+    //     y: playerCells[0]["y"],
+    //   });
+
+    //   // this.ctx.rect(x, y, 10, 10);
+    //   this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
+    //   this.ctx.fillStyle = playerCells[0]["color"];
+    //   this.ctx.fill();
+    //   this.ctx.stroke();
+    // }
+  }
 
 
+  updateOtherPlayers(playerCells){
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (playerCells && playerCells.length > 0) {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.beginPath();
-      const { x, y } = this.mapCoordinatesToMiniMap({
-        x: playerCells[0]["x"],
-        y: playerCells[0]["y"],
-      });
-
-      // this.ctx.rect(x, y, 10, 10);
-     this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
-      this.ctx.fillStyle = playerCells[0]["color"];
-      this.ctx.fill();
-      this.ctx.stroke();
+      playerCells.forEach(playerCell => {
+        // if(playerCell.lastNodeId !== this.playerId){
+          // }
+          
+          this.ctx.beginPath();
+      
+        // if(!this.playerId) this.playerId = playerCells[0]["id"]
+        const { x, y } = this.mapCoordinatesToMiniMap({
+          x: playerCell.positionX,
+          y: playerCell.positionY,
+        });
+  
+        // this.ctx.rect(x, y, 10, 10);
+        this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        this.ctx.fillStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`;
+        this.ctx.fill();
+        this.strokeStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`
+        this.ctx.stroke();
+        
+        
+      })
     }
   }
+
   mapCoordinatesToMiniMap({ x, y }) {
     //game field width ......  x pos on original game field
     //mini map width ...... ? (x pos on mini map)
