@@ -1,6 +1,5 @@
 class MiniMap {
   constructor() {
-    console.log("creating minimap");
     this.canvas = document.getElementById("canvasMiniMap");
     this.ctx = this.canvas.getContext("2d");
     // this.playerCells = [];
@@ -65,16 +64,37 @@ class MiniMap {
           y: playerCell.positionY,
         });
   
+        const size = 2 + playerCell.size * 0.05
         // this.ctx.rect(x, y, 10, 10);
-        this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        this.ctx.arc(x, y, size, 0, 2 * Math.PI);
         this.ctx.fillStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`;
         this.ctx.fill();
-        this.strokeStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`
+        this.ctx.strokeStyle = this.getStrokeColor(playerCell.color)
         this.ctx.stroke();
         
         
       })
     }
+  }
+
+  toHexColor(c) {
+    const hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+  
+  rgbToHexColor(color) {
+    return "#" + this.toHexColor(color.r) + this.toHexColor(color.g) + this.toHexColor(color.b);
+  }
+
+  getStrokeColor(color){
+    const hexColor = this.rgbToHexColor(color)
+    var r = (~~(parseInt(hexColor.substr(1, 2), 16) * 0.9)).toString(16),
+    g = (~~(parseInt(hexColor.substr(3, 2), 16) * 0.9)).toString(16),
+    b = (~~(parseInt(hexColor.substr(5, 2), 16) * 0.9)).toString(16);
+  if (r.length == 1) r = "0" + r;
+  if (g.length == 1) g = "0" + g;
+  if (b.length == 1) b = "0" + b;
+  return "#" + r + g + b;
   }
 
   mapCoordinatesToMiniMap({ x, y }) {
