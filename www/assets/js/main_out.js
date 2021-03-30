@@ -323,7 +323,7 @@
         userScore = 0;
         timeLeft = 0;
         log.info("Connecting to " + wsUrl + "..");
-        ws = new WebSocket(wsUrl);
+        ws = new WebSocket(wsUrl, "echo-protocol");
         ws.binaryType = "arraybuffer";
         ws.onopen = onWsOpen;
         ws.onmessage = onWsMessage;
