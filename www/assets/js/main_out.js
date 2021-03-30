@@ -376,7 +376,7 @@
         switch (jsonData.messageId){
             case "updatedPlayerNodes":
                 // miniMap.
-                miniMap.updateOtherPlayers(jsonData.data)
+                miniMap.updateOtherPlayers(jsonData.data, skins)
                 break
 
         }
@@ -648,9 +648,16 @@
             // miniMap.updateThisPlayerCell(playerCells)
             if(playerCells && 
                 playerCells[0] && 
-                playerCells[0].hasOwnProperty("id") &&
-                !miniMap.playerId) 
-                miniMap.playerId = playerCells[0]["id"]
+                playerCells[0].hasOwnProperty("name") &&
+                !miniMap.playerName) {
+                    miniMap.playerName = playerCells[0]["name"]
+                }
+            if(playerCells && 
+                playerCells[0] && 
+                playerCells[0].hasOwnProperty("name") &&
+                !miniMap.nodeId) {
+                    miniMap.nodeId = playerCells[0]["id"]
+                }
         }
         queueLength = view.getUint32(offset, true);
         offset += 4;

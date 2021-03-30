@@ -5,8 +5,9 @@ class MiniMap {
     // this.playerCells = [];
     this.gameFieldWidth = null;
     this.gameFieldHeight = null;
-    this.playerId = null
-
+    this.playerName = null;
+    this.nodeId = null;
+    this.SKIN_URL = "./skins/";
   }
 
   setGameFieldWidth(width) {
@@ -23,7 +24,6 @@ class MiniMap {
     }
   }
 
-
   // -- Board size --
   // topLeft: x: -7053, y: -7053
   // bottomLLeft: x: -7052, y: 7052
@@ -39,7 +39,6 @@ class MiniMap {
     //     x: playerCells[0]["x"],
     //     y: playerCells[0]["y"],
     //   });
-
     //   // this.ctx.rect(x, y, 10, 10);
     //   this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
     //   this.ctx.fillStyle = playerCells[0]["color"];
@@ -48,75 +47,130 @@ class MiniMap {
     // }
   }
 
+  //playerCell:
+  // {
+  // nodeId,
+  // ownerId,
+  // ownerName,
+  // skin,
+  // color,
+  // positionX,
+  // positionY,
+  // team,
+  // size,
+  // }
 
-  updateOtherPlayers(playerCells){
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  updateOtherPlayers(playerCells, skins) {
+    const ctx = this.canvas.getContext("2d");
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (playerCells && playerCells.length > 0) {
-      playerCells.forEach(playerCell => {
-        // if(playerCell.lastNodeId !== this.playerId){
-          // }
-          
-          this.ctx.beginPath();
-      
-        // if(!this.playerId) this.playerId = playerCells[0]["id"]
+      playerCells.forEach((playerCell) => {
+        ctx.beginPath();
+        const size = 2 + playerCell.size * 0.05;
+
         const { x, y } = this.mapCoordinatesToMiniMap({
           x: playerCell.positionX,
           y: playerCell.positionY,
         });
-  
-        const size = 2 + playerCell.size * 0.05
-        // this.ctx.rect(x, y, 10, 10);
-        this.ctx.arc(x, y, size, 0, 2 * Math.PI);
-        this.ctx.fillStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`;
-        this.ctx.fill();
-        this.ctx.strokeStyle = this.getStrokeColor(playerCell.color)
-        this.ctx.stroke();
-        
-        
-      })
+
+        if (this.currentPlayer(playerCell)) {
+          ctx.rect(x, y, size * 2, size * 2);
+        } else {
+          ctx.arc(x, y, size, 0, 2 * Math.PI);
+        }
+
+        ctx.fillStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`;
+        ctx.fill();
+        ctx.strokeStyle = this.getStrokeColor(playerCell.color);
+        ctx.stroke();
+
+        // const ctx = this.ctx
+        // if(this.hasSkin(playerCell, skins)){
+        //   this.ctx.clip();
+        //   const skinImg = this.getSkin(playerCell, skins);
+        //   skinImg.addEventListener('load', function(e) {
+        //       ctx.drawImage(this, 0, 0, 200, 300);
+        //       ctx.fill() = "red"
+        //       ctx.strokeStyle = playerCell.color
+        //       ctx.stroke();
+        //   }, true);
+        // }
+        // else{
+        // }
+      });
     }
+  }
+
+  currentPlayer(playerCell) {
+    if (this.playerName) {
+      return playerCell.nodeId === this.nodeId;
+    }
+  }
+
+  hasSkin(playerCell, skins) {
+    var teamMatch = playerCell.ownerName.match(/\[(?<TeamTag>.*)\]/);
+    var skinName = teamMatch != null ? teamMatch.groups["TeamTag"] : "";
+    if (skinName !== "" && skins.hasOwnProperty(skinName)) return true;
+    return false;
+  }
+
+  getSkin(playerCell, skins) {
+    var teamMatch = playerCell.ownerName.match(/\[(?<TeamTag>.*)\]/);
+    var skinName = teamMatch != null ? teamMatch.groups["TeamTag"] : "";
+
+    if (skinName != "") {
+      if (!skins.hasOwnProperty(skinName)) {
+        skins[skinName] = new Image();
+        skins[skinName].src = this.SKIN_URL + skinName + ".png";
+      }
+      if (0 != skins[skinName].width && skins[skinName].complete) {
+        return skins[skinName];
+      }
+    }
+    return null;
   }
 
   toHexColor(c) {
     const hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   }
-  
+
   rgbToHexColor(color) {
-    return "#" + this.toHexColor(color.r) + this.toHexColor(color.g) + this.toHexColor(color.b);
+    return (
+      "#" +
+      this.toHexColor(color.r) +
+      this.toHexColor(color.g) +
+      this.toHexColor(color.b)
+    );
   }
 
-  getStrokeColor(color){
-    const hexColor = this.rgbToHexColor(color)
+  getStrokeColor(color) {
+    const hexColor = this.rgbToHexColor(color);
     var r = (~~(parseInt(hexColor.substr(1, 2), 16) * 0.9)).toString(16),
-    g = (~~(parseInt(hexColor.substr(3, 2), 16) * 0.9)).toString(16),
-    b = (~~(parseInt(hexColor.substr(5, 2), 16) * 0.9)).toString(16);
-  if (r.length == 1) r = "0" + r;
-  if (g.length == 1) g = "0" + g;
-  if (b.length == 1) b = "0" + b;
-  return "#" + r + g + b;
+      g = (~~(parseInt(hexColor.substr(3, 2), 16) * 0.9)).toString(16),
+      b = (~~(parseInt(hexColor.substr(5, 2), 16) * 0.9)).toString(16);
+    if (r.length == 1) r = "0" + r;
+    if (g.length == 1) g = "0" + g;
+    if (b.length == 1) b = "0" + b;
+    return "#" + r + g + b;
   }
 
   mapCoordinatesToMiniMap({ x, y }) {
     //game field width ......  x pos on original game field
     //mini map width ...... ? (x pos on mini map)
-    // console.log("original:")
-    // console.log(x,y)
+
     let newCordX = 0;
     let newCordY = 0;
-    
+
     if (x < 0) newCordX = this.gameFieldWidth - Math.abs(x);
     else newCordX = this.gameFieldWidth + x;
-    
+
     if (y < 0) newCordY = this.gameFieldHeight - Math.abs(y);
     else newCordY = this.gameFieldHeight + y;
-    // console.log("gameFieldHeight: " + this.gameFieldHeight + "\nnewCordY: " + newCordY)
 
     const newX = (newCordX / (this.gameFieldWidth * 2)) * this.canvas.width;
     const newY = (newCordY / (this.gameFieldHeight * 2)) * this.canvas.height;
-    // console.log("new:")
-    // console.log(newX,newY)
-    // console.log("---------------")
+
     return { x: newX, y: newY };
   }
 }
