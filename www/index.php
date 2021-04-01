@@ -138,7 +138,10 @@
     </div>
 
     <canvas id="canvas" width="800" height="600"></canvas>
-    <canvas id="canvasMiniMap" class="canvasMiniMap" width="300" height="300"></canvas>
+    <div class="canvasMiniMapContainer">
+        <div class="miniMapBackground"></div>
+        <canvas id="canvasMiniMap" class="canvasMiniMap" width="300" height="300"></canvas>
+    </div>
     <div style="font-family:'Ubuntu'">&nbsp;</div>
 
     <script src="assets/js/minimap.js"></script>
