@@ -2,40 +2,26 @@ class MiniMap {
   constructor() {
     this.canvas = document.getElementById("canvasMiniMap");
     this.ctx = this.canvas.getContext("2d");
-    // this.playerCells = [];
     this.gameFieldWidth = null;
     this.gameFieldHeight = null;
-    this.playerName = null;
     this.nodeId = null;
-    this.SKIN_URL = "./skins/";
 
-    this.teamDictionary = {};
-    this.teamCount = 0;
+    // // skin images route
+    // this.SKIN_URL = "./skins/";
 
-    this.teamColors = this.generateTeamColors(50);
+    this.teamColors = this.generateTeamColors(TEAM_LIST.length);
+    this.teamColorsDictionary = this.createTeamColorDictionary();
+  }
 
-    // this.teamColors = [
-    //   "#799f9b",
-    //   "#f77c17",
-    //   "#938dec",
-    //   "#27e03a",
-    //   "#eb32f7",
-    //   "#161d4a",
-    //   "#acd8fb",
-    //   "#eef2dc",
-    //   "#adc91e",
-    //   "#900872",
-    //   "#dfeb40",
-    //   "#ac5313",
-    //   "#58444a",
-    //   "#aa3e53",
-    //   "#d74164",
-    //   "#c8b455",
-    //   "#e48762",
-    //   "#52ddbb",
-    //   "#efdbfe",
-    //   "#ffffff",
-    // ];
+  createTeamColorDictionary(){
+    const dictionary = {}
+    let counter = 0
+    TEAM_LIST.forEach(team => {
+      dictionary[team] = this.teamColors[counter]
+      counter++
+    })
+
+    return {...dictionary}
   }
 
   generateTeamColors(n) {
@@ -52,9 +38,8 @@ class MiniMap {
         ); //only 340 hue to avoid having red twice
       }
     }
-    console.log(colors)
 
-    // view colors
+    // // view colors
     // console.log(colors)
     // colors.forEach(color => {
     //   // const body = document.querySelector("body")
@@ -71,7 +56,7 @@ class MiniMap {
     return min + Math.random() * (max - min);
   }
 
-  //src: https://stackoverflow.com/a/44134328
+  //hslToHex src: https://stackoverflow.com/a/44134328
    hslToHex(h, s, l) {
     l /= 100;
     const a = s * Math.min(l, 1 - l) / 100;
@@ -83,24 +68,6 @@ class MiniMap {
     return `#${f(0)}${f(8)}${f(4)}`;
   }
 
-  getColor(h, s, l) {
-    // var h = randomNr(1, 360);
-    // var s = randomNr(0, 100);
-    // var l = randomNr(0, 100);
-    return "hsl(" + h + "," + s + "%," + l + "%)";
-  }
-
-  // generateTeamColors(n){
-  //   const colors = []
-  //   let amount = (0xFFFFFF - 0x0)/n
-
-  //   for(let col=0x0;col<=0xFFFFFF;col += amount) {
-  //     colors.push("#" + col);
-  //   }
-  //   console.log(colors)
-
-  //   return colors
-  // }
 
   setGameFieldWidth(width) {
     if (this.gameFieldWidth === null) {
@@ -122,23 +89,6 @@ class MiniMap {
   // bottomRight: x: 7051, y: 7051
   // Topleft: x: 7048, y: -7048
 
-  updateThisPlayerCell(playerCells) {
-    // if (playerCells && playerCells.length > 0) {
-    //   if(!this.playerId) this.playerId = playerCells[0]["id"]
-    //   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //   this.ctx.beginPath();
-    //   const { x, y } = this.mapCoordinatesToMiniMap({
-    //     x: playerCells[0]["x"],
-    //     y: playerCells[0]["y"],
-    //   });
-    //   // this.ctx.rect(x, y, 10, 10);
-    //   this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
-    //   this.ctx.fillStyle = playerCells[0]["color"];
-    //   this.ctx.fill();
-    //   this.ctx.stroke();
-    // }
-  }
-
   //playerCell:
   // {
   // nodeId,
@@ -153,11 +103,10 @@ class MiniMap {
   // }
 
   updateOtherPlayers(playerCells, skins) {
-    // console.log("-------------------------")
+
     const ctx = this.canvas.getContext("2d");
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // console.log(playerCells)
-    // console.log(this.nodeId)
+
 
     if (playerCells && playerCells.length > 0) {
 
@@ -174,61 +123,29 @@ class MiniMap {
         let fillColor = "";
         
         if (this.hasTeam(playerCell, skins)) {
-          // console.log("has team")
-          const team = this.getTeamNumber(playerCell);
-          // console.log("teeam " + team)
-          // console.log("color: " + this.teamColors[team])
-          fillColor = this.teamColors[team];
+
+          fillColor = this.getTeamColor(playerCell);
         }
         else{
          fillColor = this.rgbToHexColor(playerCell.color)
         }
+
 
         ctx.arc(x, y, size, 0, 2 * Math.PI);
         ctx.fillStyle = fillColor;
         ctx.fill();
 
         let strokeColor = "";
-        // console.log(this.currentPlayer(playerCell))
-        // console.log("*** " + strokeColor)
-        // console.log("ffff" + fillColor)
         if (this.currentPlayer(playerCell)) {
-          // console.log("this player")
           strokeColor = "#000000";
-          // strokeColor = ctx.createLinearGradient(0, 0, 170, 0);
-          // gradient.addColorStop("0", "magenta");
-          // gradient.addColorStop("0.5" ,"blue");
-          // gradient.addColorStop("1.0", "red");
-          
-          // Fill with gradient
-          // ctx.strokeStyle = gradient;
         } else {
-          // console.log("other player")
           
           strokeColor = this.getStrokeColor(fillColor);
         }
-        // console.log("stroke color: " + strokeColor)
         ctx.lineWidth = 2;
         ctx.strokeStyle = strokeColor;
         ctx.stroke();
-        
-        // `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`
-        
-        // ctx.fillStyle = `rgb(${playerCell.color.r}, ${playerCell.color.g}, ${playerCell.color.b})`;
-        
-        // const ctx = this.ctx
-        // if(this.hasSkin(playerCell, skins)){
-          //   this.ctx.clip();
-        //   const skinImg = this.getSkin(playerCell, skins);
-        //   skinImg.addEventListener('load', function(e) {
-        //       ctx.drawImage(this, 0, 0, 200, 300);
-        //       ctx.fill() = "red"
-        //       ctx.strokeStyle = playerCell.color
-        //       ctx.stroke();
-        //   }, true);
-        // }
-        // else{
-        // }
+      
       });
     }
   }
@@ -240,48 +157,40 @@ class MiniMap {
     return false
   }
 
-  getTeamNumber(playerCell) {
+  getTeamColor(playerCell) {
     var teamMatch = playerCell.ownerName.match(/\[(?<TeamTag>.*)\]/);
     var skinName = teamMatch != null ? teamMatch.groups["TeamTag"] : "";
-    if (!this.teamDictionary.hasOwnProperty(skinName)) {
-      this.teamDictionary[skinName] = this.teamCount++;
-      // console.log(this.teamDictionary);
+    if (!this.teamColorsDictionary.hasOwnProperty(skinName)) {
+      return null
     }
 
-    return this.teamDictionary[skinName];
+    return this.teamColorsDictionary[skinName];
   }
 
   hasTeam(playerCell){
-    // if(playerCell.ownerName.split)
-    // console.log(playerCell.ownerName.split("]")[0])
       var teamMatch = playerCell.ownerName.match(/\[(?<TeamTag>.*)\]/);
       var skinName = teamMatch != null ? teamMatch.groups["TeamTag"] : ""
       if(skinName.length > 0) return true
       return false
   }
   
-  // hasSkin(playerCell, skins) {
-    //   var teamMatch = playerCell.ownerName.match(/\[(?<TeamTag>.*)\]/);
+
+  // // get skin image tag - if needed on mini map
+  // getSkin(playerCell, skins) {
+  //   var teamMatch = playerCell.ownerName.match(/\[(?<TeamTag>.*)\]/);
   //   var skinName = teamMatch != null ? teamMatch.groups["TeamTag"] : "";
-  //   if (skinName !== "" && skins.hasOwnProperty(skinName)) return true;
-  //   return false;
+
+  //   if (skinName != "") {
+  //     if (!skins.hasOwnProperty(skinName)) {
+  //       skins[skinName] = new Image();
+  //       skins[skinName].src = this.SKIN_URL + skinName + ".png";
+  //     }
+  //     if (0 != skins[skinName].width && skins[skinName].complete) {
+  //       return skins[skinName];
+  //     }
+  //   }
+  //   return null;
   // }
-
-  getSkin(playerCell, skins) {
-    var teamMatch = playerCell.ownerName.match(/\[(?<TeamTag>.*)\]/);
-    var skinName = teamMatch != null ? teamMatch.groups["TeamTag"] : "";
-
-    if (skinName != "") {
-      if (!skins.hasOwnProperty(skinName)) {
-        skins[skinName] = new Image();
-        skins[skinName].src = this.SKIN_URL + skinName + ".png";
-      }
-      if (0 != skins[skinName].width && skins[skinName].complete) {
-        return skins[skinName];
-      }
-    }
-    return null;
-  }
 
   toHexColor(c) {
     const hex = c.toString(16);
