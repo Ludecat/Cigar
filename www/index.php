@@ -140,6 +140,7 @@
     <canvas id="canvas" width="800" height="600"></canvas>
     <div class="canvasMiniMapContainer">
         <div class="miniMapBackground"></div>
+        <div class="miniMapBackgroundOverlay"></div>
         <canvas id="canvasMiniMap" class="canvasMiniMap" width="300" height="300"></canvas>
     </div>
     <div style="font-family:'Ubuntu'">&nbsp;</div>
