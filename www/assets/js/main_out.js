@@ -829,20 +829,20 @@
         userScore = Math.max(userScore, calcUserScore());
         if (0 != userScore) {
             if (null == scoreText) {
-                scoreText = new UText(24, '#FFFFFF');
+                scoreText = new UText(34, '#FFFFFF');
             }
             scoreText.setValue('Score: ' + ~~(userScore / 100));
             c = scoreText.render();
             a = c.width;
             ctx.globalAlpha = .2;
             ctx.fillStyle = '#000000';
-            ctx.fillRect(10, 10, a + 10, 34); //canvasHeight - 10 - 24 - 10
+            ctx.fillRect(10, 10, a + 10, 44); //canvasHeight - 10 - 24 - 10
             ctx.globalAlpha = 1;
             ctx.drawImage(c, 15, 15); //canvasHeight - 10 - 24 - 5
         }
 
         if(null == timerText){
-            timerText = new UText(24, '#FFFFFF');
+            timerText = new UText(54, '#FFFFFF');
         }
 
         var minutesLeft = Math.trunc(timeLeft/60);
@@ -853,7 +853,7 @@
         a = c.width;
         ctx.globalAlpha = .2;
         ctx.fillStyle = '#000000';
-        ctx.fillRect(canvasWidth/2 - (a+10)/2, 10, a + 10, 34); //canvasHeight - 10 - 24 - 10
+        ctx.fillRect(canvasWidth/2 - (a+10)/2, 10, a + 10, 74); //canvasHeight - 10 - 24 - 10
         ctx.globalAlpha = 1;
         ctx.drawImage(c, canvasWidth/2-(a+10)/2 + 5, 15); //canvasHeight - 10 - 24 - 5
 
