@@ -5,6 +5,7 @@ class MiniMap {
     this.gameFieldWidth = null;
     this.gameFieldHeight = null;
     this.nodeId = null;
+    this.ownerId = null
 
     // // skin images route
     // this.SKIN_URL = "./skins/";
@@ -107,7 +108,6 @@ class MiniMap {
     const ctx = this.canvas.getContext("2d");
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-
     if (playerCells && playerCells.length > 0) {
 
       playerCells.forEach((playerCell) => {
@@ -137,6 +137,7 @@ class MiniMap {
 
         let strokeColor = "";
         if (this.currentPlayer(playerCell)) {
+          if(!this.ownerId) this.ownerId = playerCell.ownerId
           strokeColor = "#000000";
         } else {
           
@@ -151,6 +152,10 @@ class MiniMap {
   }
 
   currentPlayer(playerCell) {
+    if(this.ownerId){
+      return playerCell.ownerId === this.ownerId
+
+    }
     if (this.nodeId) {
       return playerCell.nodeId === this.nodeId;
     }
