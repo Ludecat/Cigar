@@ -841,9 +841,13 @@
             ctx.drawImage(c, 15, 15); //canvasHeight - 10 - 24 - 5
         }
 
-        if(null == timerText){
-            timerText = new UText(54, '#FFFFFF');
-        }
+        // if(null == timerText){
+            let textColor = "#FFFFFF"
+
+            if(timeLeft <= 10)
+            textColor = "#ff0000"
+            timerText = new UText(54, textColor);
+        // }
 
         var minutesLeft = Math.trunc(timeLeft/60);
         var secondsLeft = timeLeft%60;
