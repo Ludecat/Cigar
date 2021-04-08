@@ -378,8 +378,29 @@
                 // miniMap.
                 miniMap.updateOtherPlayers(jsonData.data, skins)
                 break
+            case "startCountdown":
+                console.log("Start countdown " + jsonData.countdownTime)
+                startCountdown(jsonData.countdownTime)
+                break
 
         }
+    }
+
+    function startCountdown(time){
+        const countdownContainer = document.querySelector(".js-countdown-container")
+        const countdownParagraph = document.querySelector(".js-countdown")
+        countdownContainer.classList.remove("hidden")
+        time /=  1000
+        countdownParagraph.textContent = time
+        time -= 1
+        const countdownInterval = setInterval(() => {
+            countdownParagraph.textContent = time
+            time -= 1
+            if(time < 0){
+                clearInterval(countdownInterval)
+                countdownContainer.classList.add("hidden")  
+            }
+        }, 1000)
     }
 
 

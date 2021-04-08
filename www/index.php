@@ -122,12 +122,17 @@
                 </center>
             </div>
 
+
             <hr />
             <div id="footer">
                 <a href="https://github.com/CigarProject/Cigar" class="text-muted">GitHub/CigarProject</a>
             </div>
 
         </div>
+    </div>
+
+    <div id="countdown" class="hidden js-countdown-container">
+        <p class="js-countdown"></p>
     </div>
 
     <div id="connecting">
