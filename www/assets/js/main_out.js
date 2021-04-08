@@ -379,7 +379,6 @@
                 miniMap.updateOtherPlayers(jsonData.data, skins)
                 break
             case "startCountdown":
-                console.log("Start countdown " + jsonData.countdownTime)
                 startCountdown(jsonData.countdownTime)
                 break
 
