@@ -378,8 +378,28 @@
                 // miniMap.
                 miniMap.updateOtherPlayers(jsonData.data, skins)
                 break
+            case "startCountdown":
+                startCountdown(jsonData.countdownTime)
+                break
 
         }
+    }
+
+    function startCountdown(time){
+        const countdownContainer = document.querySelector(".js-countdown-container")
+        const countdownParagraph = document.querySelector(".js-countdown")
+        countdownContainer.classList.remove("hidden")
+        time /=  1000
+        countdownParagraph.textContent = time
+        time -= 1
+        const countdownInterval = setInterval(() => {
+            countdownParagraph.textContent = time
+            time -= 1
+            if(time < 0){
+                clearInterval(countdownInterval)
+                countdownContainer.classList.add("hidden")  
+            }
+        }, 1000)
     }
 
 
@@ -829,21 +849,29 @@
         userScore = Math.max(userScore, calcUserScore());
         if (0 != userScore) {
             if (null == scoreText) {
-                scoreText = new UText(24, '#FFFFFF');
+                scoreText = new UText(34, '#FFFFFF');
             }
             scoreText.setValue('Score: ' + ~~(userScore / 100));
             c = scoreText.render();
             a = c.width;
             ctx.globalAlpha = .2;
             ctx.fillStyle = '#000000';
-            ctx.fillRect(10, 10, a + 10, 34); //canvasHeight - 10 - 24 - 10
+            ctx.fillRect(10, 10, a + 10, 44); //canvasHeight - 10 - 24 - 10
             ctx.globalAlpha = 1;
             ctx.drawImage(c, 15, 15); //canvasHeight - 10 - 24 - 5
         }
 
-        if(null == timerText){
-            timerText = new UText(24, '#FFFFFF');
-        }
+        // if(null == timerText){
+            let textColor = "#FFFFFF"
+
+            //to avoid red timer before game starts
+            if(timeLeft > 0 && timeBefore === 0) timeBefore = timeLeft
+
+            //when timer at and under 10 sec -> red
+            if(timeLeft <= 10 && timeBefore > 0)
+            textColor = "#ff0000"
+            timerText = new UText(54, textColor);
+        // }
 
         var minutesLeft = Math.trunc(timeLeft/60);
         var secondsLeft = timeLeft%60;
@@ -853,7 +881,7 @@
         a = c.width;
         ctx.globalAlpha = .2;
         ctx.fillStyle = '#000000';
-        ctx.fillRect(canvasWidth/2 - (a+10)/2, 10, a + 10, 34); //canvasHeight - 10 - 24 - 10
+        ctx.fillRect(canvasWidth/2 - (a+10)/2, 10, a + 10, 74); //canvasHeight - 10 - 24 - 10
         ctx.globalAlpha = 1;
         ctx.drawImage(c, canvasWidth/2-(a+10)/2 + 5, 15); //canvasHeight - 10 - 24 - 5
 
@@ -1086,6 +1114,7 @@
         ua = false,
         userScore = 0,
         timeLeft =0,
+        timeBefore = 0,
         showDarkTheme = false,
         showMass = false,
         hideChat = false,
