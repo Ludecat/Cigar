@@ -865,7 +865,11 @@
         // if(null == timerText){
             let textColor = "#FFFFFF"
 
-            if(timeLeft <= 10)
+            //to avoid red timer before game starts
+            if(timeLeft > 0 && timeBefore === 0) timeBefore = timeLeft
+
+            //when timer at and under 10 sec -> red
+            if(timeLeft <= 10 && timeBefore > 0)
             textColor = "#ff0000"
             timerText = new UText(54, textColor);
         // }
@@ -1111,6 +1115,7 @@
         ua = false,
         userScore = 0,
         timeLeft =0,
+        timeBefore = 0,
         showDarkTheme = false,
         showMass = false,
         hideChat = false,
