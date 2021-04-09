@@ -6,14 +6,73 @@
     backgroundImage.src = "assets/img/LudecatAgarBackground.svg";
 
 
+    //------ Create Team Color Dictionary -----
+    
+    const teamColors = generateTeamColors(TEAM_LIST.length);
+    const teamColorsDictionary = createTeamColorDictionary();
+
+    function generateTeamColors(n) {
+        const colors = [];
+        const hueValues = [0, 90, 168,  194, 30, 210, 42, 235, 70, 280,180, 295, 325, 51, 152]
+        const nrOfHues = hueValues.length;
+        const lightnessValues = [50, 85, 30, 70, 45]
+    
+        const nrOfRounds = Math.ceil(n / nrOfHues);
+        for (let i = 0; i < nrOfRounds; i++) {
+          for (let j = 0; j < nrOfHues; j++) {
+            colors.push(
+              hslToHex(hueValues[j], 100, lightnessValues[i])  //(i + 1) * (100 / nrOfRounds)
+            ); //only 340 hue to avoid having red twice
+          }
+        }
+    
+        // // view colors
+        // console.log(colors)
+        // colors.forEach(color => {
+        //   // const body = document.querySelector("body")
+        //   const div = document.createElement("div")
+        //   div.style.width = "200px"
+        //   div.style.height = "5px"
+        //   div.style.backgroundColor = color
+        //   document.body.appendChild(div)
+        // })
+        return colors;
+      }
+
+      function randomNr(min, max) {
+        return min + Math.random() * (max - min);
+      }
+    
+      //hslToHex src: https://stackoverflow.com/a/44134328
+       function hslToHex(h, s, l) {
+        l /= 100;
+        const a = s * Math.min(l, 1 - l) / 100;
+        const f = n => {
+          const k = (n + h / 30) % 12;
+          const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+          return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+        };
+        return `#${f(0)}${f(8)}${f(4)}`;
+      }
+    
+
+    function createTeamColorDictionary(){
+        const dictionary = {}
+        let counter = 0
+        TEAM_LIST.forEach(team => {
+          dictionary[team] = teamColors[counter]
+          counter++
+        })
+    
+        return {...dictionary}
+      }
+    
+    //-------
+
     //------ MINIMAP -------
-    const miniMap = new MiniMap()
-    // const canvasMinimMap = document.getElementById("canvasMiniMap")
-    // const ctxMiniMap = canvasMinimMap.getContext("2d");
-    // backgroundImage.onload = function(){
-    //     // ctxMiniMap.drawImage(backgroundImage ,0,0);  
-    // }
+    const miniMap = new MiniMap(teamColorsDictionary)
     //------ End minimap -------
+
 
 
 
@@ -1467,6 +1526,7 @@
                         else ctx.strokeStyle = this.color;
 
                     }
+                    
                 }
                 ctx.beginPath();
                 if (b) {
@@ -1495,9 +1555,27 @@
                     if (this._skin[0] == '%') {
                         skinName = this._skin.substring(1);
                     }
-                }
 
+
+                }
+                
+                
+                
                 if (showSkin && skinName != '') {
+
+                    //change stroke color to team color
+                    if(teamColorsDictionary.hasOwnProperty(skinName)){
+                        let strokeColor =  teamColorsDictionary[skinName]
+                        if(cell && cell.isInvulnerable){
+                            strokeColor = hexToRgb(strokeColor)
+                            ctx.strokeStyle = `rgba(${strokeColor.r}, ${strokeColor.g}, ${strokeColor.b}, 0.4)`
+                        }
+                        else{
+                            ctx.strokeStyle = strokeColor
+                        }
+
+                    }
+                    
                     if (!skins.hasOwnProperty(skinName)) {
                         skins[skinName] = new Image;
                         skins[skinName].src = SKIN_URL + skinName + '.png';
