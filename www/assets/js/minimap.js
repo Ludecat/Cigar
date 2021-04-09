@@ -1,5 +1,5 @@
 class MiniMap {
-  constructor() {
+  constructor(teamColorsDictionary) {
     this.canvas = document.getElementById("canvasMiniMap");
     this.ctx = this.canvas.getContext("2d");
     this.gameFieldWidth = null;
@@ -9,64 +9,7 @@ class MiniMap {
 
     // // skin images route
     // this.SKIN_URL = "./skins/";
-
-    this.teamColors = this.generateTeamColors(TEAM_LIST.length);
-    this.teamColorsDictionary = this.createTeamColorDictionary();
-  }
-
-  createTeamColorDictionary(){
-    const dictionary = {}
-    let counter = 0
-    TEAM_LIST.forEach(team => {
-      dictionary[team] = this.teamColors[counter]
-      counter++
-    })
-
-    return {...dictionary}
-  }
-
-  generateTeamColors(n) {
-    const colors = [];
-    const hueValues = [0, 60, 90, 168,  194, 30, 210, 42, 235, 70, 280,180, 295, 325, 51, 152]
-    const nrOfHues = hueValues.length;
-    const lightnessValues = [50, 85, 30, 70, 45]
-
-    const nrOfRounds = Math.ceil(n / nrOfHues);
-    for (let i = 0; i < nrOfRounds; i++) {
-      for (let j = 0; j < nrOfHues; j++) {
-        colors.push(
-          this.hslToHex(hueValues[j], 100, lightnessValues[i])  //(i + 1) * (100 / nrOfRounds)
-        ); //only 340 hue to avoid having red twice
-      }
-    }
-
-    // // view colors
-    // console.log(colors)
-    // colors.forEach(color => {
-    //   // const body = document.querySelector("body")
-    //   const div = document.createElement("div")
-    //   div.style.width = "200px"
-    //   div.style.height = "5px"
-    //   div.style.backgroundColor = color
-    //   document.body.appendChild(div)
-    // })
-    return colors;
-  }
-
-  randomNr(min, max) {
-    return min + Math.random() * (max - min);
-  }
-
-  //hslToHex src: https://stackoverflow.com/a/44134328
-   hslToHex(h, s, l) {
-    l /= 100;
-    const a = s * Math.min(l, 1 - l) / 100;
-    const f = n => {
-      const k = (n + h / 30) % 12;
-      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-      return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
-    };
-    return `#${f(0)}${f(8)}${f(4)}`;
+    this.teamColorsDictionary = teamColorsDictionary
   }
 
 

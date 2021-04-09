@@ -6,14 +6,58 @@
     backgroundImage.src = "assets/img/LudecatAgarBackground.svg";
 
 
+    //------ Create Team Color Dictionary -----
+    
+    const teamColors = generateTeamColors(TEAM_LIST.length);
+    const teamColorsDictionary = createTeamColorDictionary();
+
+    function generateTeamColors(n) {
+        const colors = [];
+        const hueValues = [0, 90, 168,  194, 30, 210, 42, 235, 70, 280,180, 295, 325, 51, 152]
+        const nrOfHues = hueValues.length;
+        const lightnessValues = [50, 85, 30, 70, 45]
+    
+        const nrOfRounds = Math.ceil(n / nrOfHues);
+        for (let i = 0; i < nrOfRounds; i++) {
+          for (let j = 0; j < nrOfHues; j++) {
+            colors.push(
+              hslToHex(hueValues[j], 100, lightnessValues[i])  //(i + 1) * (100 / nrOfRounds)
+            ); //only 340 hue to avoid having red twice
+          }
+        }
+        return colors;
+      }
+    
+      //hslToHex src: https://stackoverflow.com/a/44134328
+       function hslToHex(h, s, l) {
+        l /= 100;
+        const a = s * Math.min(l, 1 - l) / 100;
+        const f = n => {
+          const k = (n + h / 30) % 12;
+          const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+          return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+        };
+        return `#${f(0)}${f(8)}${f(4)}`;
+      }
+    
+
+    function createTeamColorDictionary(){
+        const dictionary = {}
+        let counter = 0
+        TEAM_LIST.forEach(team => {
+          dictionary[team] = teamColors[counter]
+          counter++
+        })
+    
+        return {...dictionary}
+      }
+    
+    //-------
+
     //------ MINIMAP -------
-    const miniMap = new MiniMap()
-    // const canvasMinimMap = document.getElementById("canvasMiniMap")
-    // const ctxMiniMap = canvasMinimMap.getContext("2d");
-    // backgroundImage.onload = function(){
-    //     // ctxMiniMap.drawImage(backgroundImage ,0,0);  
-    // }
+    const miniMap = new MiniMap(teamColorsDictionary)
     //------ End minimap -------
+
 
 
 
@@ -610,6 +654,7 @@
             var colorstr = "#" + color,
                 flags = view.getUint8(offset++),
                 flagVirus = !!(flags & 0x01),
+                flagIsInvulnerable = !!(flags & 0x08),
                 flagEjected = !!(flags & 0x20),
                 flagAgitated = !!(flags & 0x10),
                 _skin = "";
@@ -650,6 +695,7 @@
             node.isVirus = flagVirus;
             node.isEjected = flagEjected;
             node.isAgitated = flagAgitated;
+            node.isInvulnerable = flagIsInvulnerable
             node.nx = posX;
             node.ny = posY;
             node.setSize(size);
@@ -821,9 +867,10 @@
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
         ctx.scale(viewZoom, viewZoom);
         ctx.translate(-nodeX, -nodeY);
+
         for (d = 0; d < Cells.length; d++) Cells[d].drawOneCell(ctx);
 
-        for (d = 0; d < nodelist.length; d++) nodelist[d].drawOneCell(ctx);
+        for (d = 0; d < nodelist.length; d++) nodelist[d].drawOneCell(ctx, nodelist[d]);
         if (drawLine) {
             drawLineX = (3 * drawLineX + lineX) /
                 4;
@@ -1427,7 +1474,7 @@
             if (b.length == 1) b = "0" + b;
             return "#" + r + g + b;
         },
-        drawOneCell: function (ctx) {
+        drawOneCell: function (ctx, cell = null) {
             if (this.shouldRender()) {
                 var b = (0 != this.id && !this.isVirus && !this.isAgitated && smoothRender > viewZoom);
                 if (10 > this.getNumPoints()) b = true;
@@ -1449,9 +1496,22 @@
                     ctx.fillStyle = "#FFFFFF";
                     ctx.strokeStyle = "#AAAAAA";
                 } else {
-                    ctx.fillStyle = this.color;
-                    if (b) ctx.strokeStyle = this.getStrokeColor();
-                    else ctx.strokeStyle = this.color;
+                    //here
+                    if(cell && cell.isInvulnerable){
+                        const colorRgb = hexToRgb(this.color)
+                        ctx.fillStyle = `rgba(${colorRgb.r}, ${colorRgb.g}, ${colorRgb.b}, 0.4)`
+                        let strokeColor =  this.color;
+                        if(b) strokeColor = this.getStrokeColor()
+                        strokeColor = hexToRgb(strokeColor)
+                        ctx.strokeStyle = `rgba(${strokeColor.r}, ${strokeColor.g}, ${strokeColor.b}, 0.4)`
+                    }
+                    else{
+                        ctx.fillStyle = this.color;
+                        if (b) ctx.strokeStyle = this.getStrokeColor();
+                        else ctx.strokeStyle = this.color;
+
+                    }
+                    
                 }
                 ctx.beginPath();
                 if (b) {
@@ -1480,9 +1540,23 @@
                     if (this._skin[0] == '%') {
                         skinName = this._skin.substring(1);
                     }
-                }
 
+
+                }
+                
+                
+                
                 if (showSkin && skinName != '') {
+
+                    //change stroke color to team color
+                    if(teamColorsDictionary.hasOwnProperty(skinName)){
+                        let strokeColor =  teamColorsDictionary[skinName]
+                        ctx.strokeStyle = strokeColor
+                        if(cell && cell.isInvulnerable){
+                            ctx.globalAlpha = 0.4;
+                        }
+                    }
+                    
                     if (!skins.hasOwnProperty(skinName)) {
                         skins[skinName] = new Image;
                         skins[skinName].src = SKIN_URL + skinName + '.png';
@@ -1548,6 +1622,17 @@
             }
         }
     };
+
+    //src: https://stackoverflow.com/a/5624139
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        } : null;
+      }
+      
     UText.prototype = {
         _value: "",
         _color: "#000000",
