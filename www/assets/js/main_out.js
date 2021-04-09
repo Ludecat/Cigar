@@ -610,6 +610,7 @@
             var colorstr = "#" + color,
                 flags = view.getUint8(offset++),
                 flagVirus = !!(flags & 0x01),
+                flagIsInvulnerable = !!(flags & 0x08),
                 flagEjected = !!(flags & 0x20),
                 flagAgitated = !!(flags & 0x10),
                 _skin = "";
@@ -650,6 +651,7 @@
             node.isVirus = flagVirus;
             node.isEjected = flagEjected;
             node.isAgitated = flagAgitated;
+            node.isInvulnerable = flagIsInvulnerable
             node.nx = posX;
             node.ny = posY;
             node.setSize(size);
@@ -821,9 +823,10 @@
         ctx.translate(canvasWidth / 2, canvasHeight / 2);
         ctx.scale(viewZoom, viewZoom);
         ctx.translate(-nodeX, -nodeY);
+
         for (d = 0; d < Cells.length; d++) Cells[d].drawOneCell(ctx);
 
-        for (d = 0; d < nodelist.length; d++) nodelist[d].drawOneCell(ctx);
+        for (d = 0; d < nodelist.length; d++) nodelist[d].drawOneCell(ctx, nodelist[d]);
         if (drawLine) {
             drawLineX = (3 * drawLineX + lineX) /
                 4;
@@ -1427,7 +1430,7 @@
             if (b.length == 1) b = "0" + b;
             return "#" + r + g + b;
         },
-        drawOneCell: function (ctx) {
+        drawOneCell: function (ctx, cell = null) {
             if (this.shouldRender()) {
                 var b = (0 != this.id && !this.isVirus && !this.isAgitated && smoothRender > viewZoom);
                 if (10 > this.getNumPoints()) b = true;
@@ -1449,9 +1452,21 @@
                     ctx.fillStyle = "#FFFFFF";
                     ctx.strokeStyle = "#AAAAAA";
                 } else {
-                    ctx.fillStyle = this.color;
-                    if (b) ctx.strokeStyle = this.getStrokeColor();
-                    else ctx.strokeStyle = this.color;
+                    //here
+                    if(cell && cell.isInvulnerable){
+                        const colorRgb = hexToRgb(this.color)
+                        ctx.fillStyle = `rgba(${colorRgb.r}, ${colorRgb.g}, ${colorRgb.b}, 0.4)`
+                        let strokeColor =  this.color;
+                        if(b) strokeColor = this.getStrokeColor()
+                        strokeColor = hexToRgb(strokeColor)
+                        ctx.strokeStyle = `rgba(${strokeColor.r}, ${strokeColor.g}, ${strokeColor.b}, 0.4)`
+                    }
+                    else{
+                        ctx.fillStyle = this.color;
+                        if (b) ctx.strokeStyle = this.getStrokeColor();
+                        else ctx.strokeStyle = this.color;
+
+                    }
                 }
                 ctx.beginPath();
                 if (b) {
@@ -1548,6 +1563,17 @@
             }
         }
     };
+
+    //src: https://stackoverflow.com/a/5624139
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        } : null;
+      }
+      
     UText.prototype = {
         _value: "",
         _color: "#000000",
