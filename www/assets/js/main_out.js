@@ -25,22 +25,7 @@
             ); //only 340 hue to avoid having red twice
           }
         }
-    
-        // // view colors
-        // console.log(colors)
-        // colors.forEach(color => {
-        //   // const body = document.querySelector("body")
-        //   const div = document.createElement("div")
-        //   div.style.width = "200px"
-        //   div.style.height = "5px"
-        //   div.style.backgroundColor = color
-        //   document.body.appendChild(div)
-        // })
         return colors;
-      }
-
-      function randomNr(min, max) {
-        return min + Math.random() * (max - min);
       }
     
       //hslToHex src: https://stackoverflow.com/a/44134328
@@ -1566,14 +1551,10 @@
                     //change stroke color to team color
                     if(teamColorsDictionary.hasOwnProperty(skinName)){
                         let strokeColor =  teamColorsDictionary[skinName]
+                        ctx.strokeStyle = strokeColor
                         if(cell && cell.isInvulnerable){
-                            strokeColor = hexToRgb(strokeColor)
-                            ctx.strokeStyle = `rgba(${strokeColor.r}, ${strokeColor.g}, ${strokeColor.b}, 0.4)`
+                            ctx.globalAlpha = 0.4;
                         }
-                        else{
-                            ctx.strokeStyle = strokeColor
-                        }
-
                     }
                     
                     if (!skins.hasOwnProperty(skinName)) {
